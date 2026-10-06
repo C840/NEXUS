@@ -4,13 +4,13 @@
  * In JSX prefer Tailwind classes (`text-critical`, `bg-surface`, ...).
  */
 export const palette = {
-  void: '#0d0b09',
-  base: '#110f0c',
-  surface: '#16130f',
-  surface2: '#1c1813',
-  surface3: '#241f18',
-  line: '#2c261e',
-  lineStrong: '#3d3428',
+  void: '#000000',
+  base: '#050505',
+  surface: '#0a0a0a',
+  surface2: '#111111',
+  surface3: '#191919',
+  line: '#222222',
+  lineStrong: '#333333',
 
   ink: '#ebe2cf',
   ink2: '#c7bba2',
