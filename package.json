@@ -8,6 +8,7 @@
     "test": "npm run test:api && npm run test:web",
     "test:api": "node scripts/test-api.mjs",
     "test:web": "npm --prefix frontend run typecheck",
-    "build": "npm --prefix frontend run build"
+    "build": "npm --prefix frontend run build",
+    "share": "node scripts/share.mjs"
   }
 }

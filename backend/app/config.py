@@ -43,5 +43,7 @@ class Config:
     live: bool = _flag("NEXUS_LIVE", "1")
     #: Start packet capture automatically when a capture driver is available.
     capture_autostart: bool = _flag("NEXUS_CAPTURE_AUTOSTART", "1")
+    #: Required on /api and /ws for requests that do not come directly from this machine (see app/security.py).
+    access_token: str = os.getenv("NEXUS_ACCESS_TOKEN", "")
     #: Log level for the nexus.* loggers.
     log_level: str = os.getenv("NEXUS_LOG_LEVEL", "INFO")

@@ -1,3 +1,4 @@
+import { ACCESS_TOKEN, authHeaders } from '../connection'
 import type { ConnectionState, RealtimeMessage } from '@/types'
 import type { ConnectionListener, RealtimeListener, RealtimeSource } from './types'
 
@@ -49,6 +50,7 @@ export function createSocketRealtime(apiBase: string): RealtimeSource {
     const base = apiBase || `${window.location.protocol}//${window.location.host}`
     const url = new URL('/ws/events', base.replace(/^http/, 'ws'))
     if (cursor !== null) url.searchParams.set('after', String(cursor))
+    if (ACCESS_TOKEN) url.searchParams.set('token', ACCESS_TOKEN)
     return url.toString()
   }
 
@@ -100,7 +102,7 @@ export function createSocketRealtime(apiBase: string): RealtimeSource {
     if (!running) return
     try {
       const url = cursor === null ? `${apiBase}/api/realtime/poll` : `${apiBase}/api/realtime/poll?after=${cursor}`
-      const res = await fetch(url, { headers: { Accept: 'application/json' } })
+      const res = await fetch(url, { headers: { Accept: 'application/json', ...authHeaders() } })
       if (!res.ok) throw new Error(String(res.status))
       deliver((await res.json()) as Frame)
       pollFailures = 0

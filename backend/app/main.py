@@ -22,6 +22,7 @@ from app import __version__
 from app.api import router, ws_router
 from app.config import Config
 from app.engine.service import NexusService, ServiceError
+from app.security import AccessTokenMiddleware
 
 
 def create_app(config: Optional[Config] = None, service: Optional[NexusService] = None) -> FastAPI:
@@ -52,6 +53,8 @@ def create_app(config: Optional[Config] = None, service: Optional[NexusService] 
         summary="Neural Explainable Unified Security — research prototype backend (simulated environment).",
         lifespan=lifespan,
     )
+    if cfg.access_token:
+        app.add_middleware(AccessTokenMiddleware, token=cfg.access_token)
     app.add_middleware(CORSMiddleware, allow_origins=cfg.cors_origins, allow_methods=["*"], allow_headers=["*"])
 
     @app.exception_handler(ServiceError)

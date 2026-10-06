@@ -83,3 +83,22 @@ def test_realtime_poll_cursor(client: TestClient) -> None:
     after = client.get("/api/realtime/poll", params={"after": cursor["seq"]}).json()
     assert any(m["type"] == "settings.update" for m in after["messages"])
     client.patch("/api/settings", json={"notifyAdministrator": True})
+
+
+def test_access_token_guards_shared_backend(service) -> None:  # noqa: ANN001
+    from fastapi.testclient import TestClient
+
+    from app.config import Config
+    from app.main import create_app
+
+    app = create_app(Config(cors_origins=["https://c840.github.io"], live=False, access_token="s3cret"), service=service)
+    with TestClient(app) as c:  # TestClient's client host is "testclient": treated as remote
+        assert c.get("/api/health").status_code == 200
+        assert c.get("/api/dashboard").status_code == 401
+        assert c.get("/api/dashboard", headers={"X-Nexus-Token": "wrong"}).status_code == 401
+        assert c.get("/api/dashboard", headers={"X-Nexus-Token": "s3cret"}).status_code == 200
+        assert c.get("/api/dashboard?token=s3cret").status_code == 200
+        pre = c.options("/api/dashboard", headers={"Origin": "https://c840.github.io", "Access-Control-Request-Method": "GET", "Access-Control-Request-Headers": "x-nexus-token"})
+        assert pre.status_code == 200
+        with c.websocket_connect("/ws/events?token=s3cret") as ws:
+            assert "seq" in ws.receive_json()

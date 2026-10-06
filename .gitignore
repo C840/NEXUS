@@ -16,3 +16,4 @@ backend/models/
 backend/data/
 backend/models_test_tmp/
 *.env
+share-link.txt

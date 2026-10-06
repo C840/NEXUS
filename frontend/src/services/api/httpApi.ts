@@ -1,11 +1,13 @@
 import { ApiError, type NexusApi } from './types'
 
+import { ACCESS_TOKEN, API_BASE_URL, IS_HOSTED, authHeaders } from '../connection'
+
 /**
  * NexusApi over HTTP → FastAPI (backend/app/api/routes.py).
- * In development the Vite dev server proxies `/api` to http://localhost:8000;
- * set VITE_API_BASE_URL to call another origin directly.
+ * In development the Vite dev server proxies `/api` to http://localhost:8000; the hosted
+ * build calls the backend origin resolved in services/connection.ts.
  */
-const BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/$/, '') ?? ''
+const BASE = API_BASE_URL
 
 type Query = Record<string, string | number | undefined>
 
@@ -37,10 +39,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   try {
     res = await fetch(`${BASE}${path}`, {
       ...init,
-      headers: { Accept: 'application/json', ...(init?.body ? { 'Content-Type': 'application/json' } : {}), ...init?.headers },
+      headers: { Accept: 'application/json', ...authHeaders(), ...(init?.body ? { 'Content-Type': 'application/json' } : {}), ...init?.headers },
     })
   } catch {
-    throw new ApiError('The NEXUS backend is unreachable. Start it with `npm run dev` from the repository root.', 0)
+    throw new ApiError(IS_HOSTED ? 'The NEXUS backend is unreachable. The owner’s PC must be running `npm run share`, and the link may have changed.' : 'The NEXUS backend is unreachable. Start it with `npm run dev` from the repository root.', 0)
   }
   if (!res.ok) throw new ApiError(await errorMessage(res), res.status)
   return (await res.json()) as T
@@ -73,4 +75,4 @@ export function createHttpApi(): NexusApi {
   }
 }
 
-export { BASE as API_BASE_URL }
+export { BASE as API_BASE_URL, ACCESS_TOKEN }

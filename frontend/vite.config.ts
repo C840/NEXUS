@@ -6,6 +6,8 @@ import tailwindcss from '@tailwindcss/vite'
 // The dev server proxies API and WebSocket traffic to the FastAPI backend
 // (introduced in phase 2). Until then the frontend uses the in-browser mock layer.
 export default defineConfig({
+  // GitHub Pages serves the hosted build under /<repo>/ (set by the deploy workflow).
+  base: process.env.VITE_BASE ?? '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: { '@': path.resolve(__dirname, 'src') },
