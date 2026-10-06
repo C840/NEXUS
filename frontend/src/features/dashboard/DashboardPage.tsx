@@ -48,7 +48,7 @@ export default function DashboardPage() {
     <div className="space-y-5">
       <DashboardHero />
       <Row index={1}>
-        <LivePipelineStrip />
+        <LivePipelineStrip compact />
       </Row>
       <Row index={2}>
         <MetricRow />

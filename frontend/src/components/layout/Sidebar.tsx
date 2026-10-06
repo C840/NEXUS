@@ -107,7 +107,7 @@ export function Sidebar({ collapsed, onToggleCollapsed }: SidebarProps) {
                         {isActive && (
                           <motion.span
                             layoutId="nav-active"
-                            className="absolute top-1/2 left-0 h-5 w-[2px] -translate-y-1/2 rounded-full bg-cyan shadow-[0_0_12px_rgba(34,211,238,0.8)]"
+                            className="absolute top-1/2 left-0 h-5 w-[2px] -translate-y-1/2 rounded-full bg-cyan"
                           />
                         )}
                         <item.icon className={cn('size-[17px] shrink-0', isActive ? 'text-cyan' : '')} strokeWidth={1.75} />

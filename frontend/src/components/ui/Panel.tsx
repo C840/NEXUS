@@ -21,8 +21,7 @@ export function Panel({ tone, flush, hairline = true, as: Tag = 'section', class
   return (
     <Tag
       className={cn(
-        'relative isolate rounded-panel border border-line bg-surface/85 backdrop-blur-[2px]',
-        'shadow-[0_1px_0_0_rgba(255,255,255,0.02)_inset,0_24px_48px_-32px_rgba(0,0,0,0.8)]',
+        'plate relative isolate rounded-panel border border-line bg-surface',
         !flush && 'p-5',
         tone && toneClasses[tone].glow,
         tone && toneClasses[tone].softBorder,
@@ -31,7 +30,7 @@ export function Panel({ tone, flush, hairline = true, as: Tag = 'section', class
       {...rest}
     >
       {hairline && (
-        <span aria-hidden className="pointer-events-none absolute inset-x-8 top-0 h-px hairline-top opacity-50" />
+        <span aria-hidden className="pointer-events-none absolute inset-x-8 top-0 h-px hairline-top opacity-70" />
       )}
       {children}
     </Tag>

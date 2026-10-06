@@ -191,6 +191,9 @@ class NexusService:
         return [e for e in self.state.events if not severity or e.severity == severity][:limit]
 
     def traffic(self, range_key: TrafficRange) -> TrafficSeries:
+        if range_key == "live" and self.live.running and self.live.history:
+            # Real packets: don't splice simulated history in front of live capture.
+            return TrafficSeries(range="live", resolution_sec=1, points=list(self.live.history))
         return traffic_series(range_key, now_ms(), self.state.overlays, self.state.settings.anomaly_threshold)
 
     def analytics(self, range_key: AnalyticsRange) -> AnalyticsData:

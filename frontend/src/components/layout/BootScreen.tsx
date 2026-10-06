@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Button } from '@/components/ui'
+import { Button, Cog } from '@/components/ui'
 import { API_BASE_URL, IS_HOSTED, connectTo } from '@/services/connection'
-import { NetworkMesh } from './NetworkMesh'
 import { NexusLogo } from './NexusLogo'
 
 const STAGES = ['Observe', 'Understand', 'Detect', 'Explain', 'Respond', 'Learn']
@@ -63,13 +62,14 @@ export function BootScreen({ error, onRetry, needsBackend }: BootScreenProps) {
 
   return (
     <div className="relative grid min-h-screen place-items-center overflow-hidden bg-void">
-      <div className="absolute inset-0 opacity-60">
-        <NetworkMesh density={0.4} intensity={0.8} />
+      <div className="absolute inset-0">
+        <Cog spin="slower" teeth={20} className="absolute top-1/2 left-1/2 size-[640px] -translate-x-1/2 -translate-y-1/2 text-cyan/10" />
+        <Cog spin="slow" reverse teeth={12} className="absolute top-[calc(50%+150px)] left-[calc(50%+250px)] size-[260px] -translate-x-1/2 -translate-y-1/2 text-cyan/8" />
       </div>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,var(--color-void)_70%)]" />
       <div className="relative flex flex-col items-center text-center">
         <NexusLogo className="size-14" />
-        <p className="mt-6 font-display text-2xl font-semibold tracking-[0.4em] text-ink">NEXUS</p>
+        <p className="mt-6 font-display text-3xl font-medium tracking-[0.3em] text-ink">NEXUS</p>
         <p className="mt-2 font-mono text-[10px] tracking-[0.24em] text-muted">NEURAL EXPLAINABLE UNIFIED SECURITY</p>
         {needsBackend || (IS_HOSTED && error) ? (
           <>

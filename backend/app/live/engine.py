@@ -65,6 +65,7 @@ class LiveEngine:
         self._last_alert: dict[tuple[str, str], float] = {}
         self._pps_baseline: Optional[float] = None
         self._last_point: Optional[TrafficPoint] = None
+        self.history: deque[TrafficPoint] = deque(maxlen=120)  # last 2 minutes, for the LIVE chart
         self._recent_anomaly = deque(maxlen=10)
         self._task: Optional[asyncio.Task[None]] = None
 
@@ -169,6 +170,7 @@ class LiveEngine:
         self.capture = None
         self.phase = "stopped"
         self._last_point = None
+        self.history.clear()
         self._publish_source()
 
     async def retrain(self) -> None:
@@ -237,6 +239,7 @@ class LiveEngine:
             attack=None,
             phase=None,
         )
+        self.history.append(self._last_point)
 
     def live_point(self) -> Optional[TrafficPoint]:
         return self._last_point if self.running else None

@@ -4,13 +4,12 @@ import { cn } from '@/lib/cn'
 import { formatTime } from '@/lib/format'
 import { systemStatusMeta } from '@/lib/severity'
 import { toneClasses } from '@/lib/theme'
-import { NetworkMesh } from '@/components/layout/NetworkMesh'
-import { StatusDot } from '@/components/ui'
+import { Cog, StatusDot } from '@/components/ui'
 import { useNow } from '@/hooks/useNow'
 import { useActiveThreats, useAutonomousMode, useDataSource, useSimulation, useSystemStatus } from '@/store'
 import { useSituationSummary } from './useSituationSummary'
 
-/** Dashboard hero: identity, system status, defense mode and a one-line situation summary over a living mesh. */
+/** Dashboard hero: identity, system status, defense mode and a one-line situation summary, with quiet turning gears. */
 export function DashboardHero() {
   const now = useNow(1000)
   const status = useSystemStatus()
@@ -27,17 +26,18 @@ export function DashboardHero() {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      className="relative isolate overflow-hidden rounded-[18px] border border-line bg-base/80"
+      className="plate relative isolate overflow-hidden rounded-panel border border-line bg-surface"
     >
-      <div className="absolute inset-0 -z-10 opacity-80 [mask-image:linear-gradient(90deg,transparent_0%,black_35%,black_100%)]">
-        <NetworkMesh alert={alert} density={0.5} intensity={0.85} />
+      <div aria-hidden className={cn('absolute inset-y-0 right-0 -z-10 w-[420px] overflow-hidden', alert ? 'text-critical/15' : 'text-cyan/12')}>
+        <Cog spin="slower" teeth={18} className="absolute -top-24 -right-16 size-[340px]" />
+        <Cog spin="slow" reverse teeth={11} className="absolute top-28 right-60 size-[150px]" />
       </div>
-      <div aria-hidden className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_120%_at_0%_0%,rgba(34,211,238,0.07),transparent_60%)]" />
+      <div aria-hidden className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_120%_at_0%_0%,rgba(196,154,92,0.06),transparent_60%)]" />
       <span aria-hidden className="pointer-events-none absolute inset-x-10 top-0 h-px hairline-top" />
 
       <div className="grid items-end gap-6 px-6 py-6 lg:grid-cols-[minmax(0,1fr)_auto] xl:px-8 xl:py-7">
         <div className="min-w-0 max-w-4xl">
-          <p className="eyebrow mb-3 text-cyan/90">NEXUS · Neural Explainable Unified Security</p>
+          <p className="eyebrow mb-3 text-cyan/80">Neural Explainable Unified Security</p>
           <h1 className="font-display text-[32px] leading-tight font-medium tracking-tight text-ink xl:text-[36px]">Network Security Intelligence</h1>
 
           <div className="mt-4 flex flex-wrap items-center gap-2.5">
@@ -73,7 +73,7 @@ export function DashboardHero() {
           </p>
           {dataSource && (
             <p className="flex max-w-[260px] items-center gap-1.5 text-[11px] text-faint" title={dataSource.description}>
-              <FlaskConical className="size-3 text-violet-soft" aria-hidden />
+              <FlaskConical className="size-3 text-cyan/70" aria-hidden />
               {dataSource.label} — {dataSource.mode === 'live_capture' ? 'real packets' : 'simulated telemetry'}
             </p>
           )}

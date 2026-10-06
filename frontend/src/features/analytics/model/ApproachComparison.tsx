@@ -12,7 +12,7 @@ const METRICS = [
 ] as const
 
 /** Dot color classes per approach, in comparison order (traditional, anomaly, hybrid). */
-const DOT = ['bg-muted', 'bg-blue', 'bg-cyan shadow-[0_0_0_3px_rgba(34,211,238,0.18),0_0_16px_rgba(34,211,238,0.6)]']
+const DOT = ['bg-muted', 'bg-blue', 'bg-cyan shadow-[0_0_0_3px_rgba(196,154,92,0.18)]']
 const TEXT = ['text-muted', 'text-blue', 'text-cyan']
 
 /**

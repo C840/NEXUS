@@ -29,7 +29,7 @@ export function InvestigationHeader({ threat }: { threat: ThreatDetail }) {
           </span>
           <div className="min-w-0">
             <p className="eyebrow mb-2 text-cyan/80">Threat investigation · {threat.id}</p>
-            <h1 className="font-display text-[30px] leading-none font-medium tracking-[0.04em] text-ink uppercase">{threat.name}</h1>
+            <h1 className="font-display text-[30px] leading-none font-medium tracking-tight text-ink">{threat.name}</h1>
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <SeverityBadge severity={threat.severity} size="md" />
               <ThreatStatusBadge status={threat.status} size="md" />

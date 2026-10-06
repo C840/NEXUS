@@ -113,7 +113,7 @@ export function PolicySlider({
           aria-hidden
           className={cn(
             'pointer-events-none absolute top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-cyan bg-void',
-            'shadow-[0_0_14px_-2px_rgba(34,211,238,0.6)] transition-transform duration-150',
+            'shadow-[0_2px_6px_rgba(0,0,0,0.6)] transition-transform duration-150',
             'peer-hover:scale-110 peer-active:scale-110',
             'peer-focus-visible:ring-2 peer-focus-visible:ring-cyan/60 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-surface',
           )}

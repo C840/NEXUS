@@ -8,13 +8,11 @@ import { Toaster } from './Toaster'
 import { TopBar } from './TopBar'
 import { PageSkeleton } from './PageSkeleton'
 
-/** Fixed, very quiet backdrop: two soft color fields + a fading technical grid. */
+/** Fixed, very quiet backdrop: a faint engraved grid fading from the top. */
 function Backdrop() {
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <div className="absolute -top-48 left-[12%] h-[520px] w-[720px] rounded-full bg-cyan/[0.045] blur-[120px]" />
-      <div className="absolute -top-40 right-[-8%] h-[480px] w-[640px] rounded-full bg-violet/[0.05] blur-[120px]" />
-      <div className="absolute inset-0 bg-grid bg-grid-fade opacity-40" />
+      <div className="absolute inset-0 bg-grid bg-grid-fade opacity-25" />
     </div>
   )
 }
