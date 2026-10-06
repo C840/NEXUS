@@ -51,6 +51,21 @@ and starts alerting. Only header fields are kept, and payloads are never stored.
 DNS anomaly, DDoS) are learned from synthetic attack profiles layered on your real benign traffic, so treat
 detections as research-grade.
 
+### Hosted website (GitHub Pages)
+
+The frontend is published at **https://c840.github.io/NEXUS/** by `.github/workflows/pages.yml` on every push
+to `main` that touches `frontend/`. The backend stays on your PC, which is the only place packet capture can run.
+To share it:
+
+```bash
+npm run share
+```
+
+This starts the backend plus a Cloudflare quick tunnel ([cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/installation/)
+must be installed). It prints a link of the form `https://c840.github.io/NEXUS/?api=<tunnel>&token=<token>` and saves it to
+`share-link.txt`. The site works only while that command runs. The tunnel URL and access token change every run,
+and without the token the backend rejects remote requests.
+
 ### LLM assistant (optional)
 
 Set `GROQ_API_KEY` (and optionally `NEXUS_LLM_MODEL`, default `openai/gpt-oss-120b`) in `backend/.env`.
@@ -135,3 +150,4 @@ scripts/    dev.mjs (run everything) · test-api.mjs
 | 2 | FastAPI backend, frontend connected | ✅ |
 | 3 | Attack simulator + realtime event flow (WebSocket) | ✅ |
 | 4 | Real Scapy capture, Isolation Forest + XGBoost + SHAP, Groq LLM narration | ✅ (prototype) |
+| — | Hosted frontend on GitHub Pages + `npm run share` tunnel | ✅ |
