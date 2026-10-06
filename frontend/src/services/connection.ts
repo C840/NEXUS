@@ -33,7 +33,22 @@ function write(key: string, value: string): void {
 function normalize(url: string): string {
   const trimmed = url.trim().replace(/\/+$/, '')
   if (!trimmed) return ''
-  return /^https?:\/\//.test(trimmed) ? trimmed : `https://${trimmed}`
+  const withScheme = /^https?:\/\//.test(trimmed) ? trimmed : `https://${trimmed}`
+  try {
+    return new URL(withScheme).origin // the backend is always served from an origin root
+  } catch {
+    return withScheme
+  }
+}
+
+/** Accepts either the separate fields or a whole share link pasted into one of them. */
+export function parseConnection(urlField: string, tokenField: string): { apiBase: string; token: string } {
+  for (const value of [urlField, tokenField]) {
+    const query = value.includes('?') ? value.slice(value.indexOf('?')) : ''
+    const api = new URLSearchParams(query).get('api')
+    if (api) return { apiBase: normalize(api), token: (new URLSearchParams(query).get('token') ?? tokenField).trim() }
+  }
+  return { apiBase: normalize(urlField), token: tokenField.trim() }
 }
 
 function resolve(): { apiBase: string; token: string } {
@@ -70,9 +85,10 @@ export function authHeaders(): Record<string, string> {
 }
 
 /** Save a new backend location and reload so every service picks it up. */
-export function connectTo(apiBase: string, token: string): void {
-  write(API_KEY, normalize(apiBase))
-  write(TOKEN_KEY, token.trim())
+export function connectTo(urlField: string, tokenField: string): void {
+  const { apiBase, token } = parseConnection(urlField, tokenField)
+  write(API_KEY, apiBase)
+  write(TOKEN_KEY, token)
   window.location.reload()
 }
 

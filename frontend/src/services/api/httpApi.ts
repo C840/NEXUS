@@ -45,7 +45,11 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new ApiError(IS_HOSTED ? 'The NEXUS backend is unreachable. The owner’s PC must be running `npm run share`, and the link may have changed.' : 'The NEXUS backend is unreachable. Start it with `npm run dev` from the repository root.', 0)
   }
   if (!res.ok) throw new ApiError(await errorMessage(res), res.status)
-  return (await res.json()) as T
+  try {
+    return (await res.json()) as T
+  } catch {
+    throw new ApiError(`${BASE || 'This address'} did not answer like a NEXUS backend. Check the backend URL (it should look like https://name.trycloudflare.com).`, 502)
+  }
 }
 
 const post = <T>(path: string, body: unknown, method = 'POST') => request<T>(path, { method, body: JSON.stringify(body) })
