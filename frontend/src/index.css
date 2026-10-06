@@ -1,0 +1,160 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+@import "@fontsource-variable/space-grotesk";
+@import "tailwindcss";
+
+/*
+ * NEXUS design tokens.
+ * Every color used in the UI derives from this palette. Keep `src/lib/theme.ts`
+ * in sync — charts (SVG attributes) need raw hex values.
+ */
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
+  --font-display: "Space Grotesk Variable", "Inter Variable", ui-sans-serif, sans-serif;
+
+  /* Foundation — near-black navy */
+  --color-void: #04060b;
+  --color-base: #070a12;
+  --color-surface: #0a0f1a;
+  --color-surface-2: #0f1624;
+  --color-surface-3: #151d2f;
+  --color-line: #182133;
+  --color-line-strong: #243049;
+
+  /* Text */
+  --color-ink: #e6edf7;
+  --color-ink-2: #b4c0d3;
+  --color-muted: #7d8ba3;
+  --color-faint: #4e5b73;
+
+  /* Accent */
+  --color-cyan: #22d3ee;
+  --color-cyan-soft: #7ee7f8;
+  --color-blue: #4f8cff;
+  --color-violet: #8b5cf6;
+  --color-violet-soft: #b49cfb;
+
+  /* Threat / state semantics */
+  --color-critical: #ff4d5e;
+  --color-high: #ff8a3d;
+  --color-medium: #f5c542;
+  --color-low: #4cc9f0;
+  --color-info: #4cc9f0;
+  --color-safe: #34d399;
+  --color-blocked: #6b7a90;
+
+  --radius-panel: 14px;
+
+  --animate-pulse-ring: pulse-ring 2.2s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+  --animate-dash-flow: dash-flow 1.2s linear infinite;
+  --animate-shimmer: shimmer 2.4s linear infinite;
+  --animate-blink: blink 1.6s ease-in-out infinite;
+
+  @keyframes pulse-ring {
+    0% { transform: scale(0.9); opacity: 0.7; }
+    80%, 100% { transform: scale(2.4); opacity: 0; }
+  }
+  @keyframes dash-flow {
+    to { stroke-dashoffset: -24; }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--color-void);
+  }
+  body {
+    @apply bg-void text-ink font-sans antialiased;
+    font-feature-settings: "cv11", "ss01", "ss03";
+    min-height: 100vh;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--color-cyan) 28%, transparent);
+    color: var(--color-ink);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+  *::-webkit-scrollbar { width: 8px; height: 8px; }
+  *::-webkit-scrollbar-thumb { background: var(--color-line-strong); border-radius: 8px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  :focus-visible {
+    outline: 1px solid var(--color-cyan);
+    outline-offset: 2px;
+  }
+  /* Recharts draws focus rings on click — not wanted in a command center UI. */
+  .recharts-wrapper *:focus,
+  .recharts-surface:focus { outline: none; }
+}
+
+/* Small uppercase mono label used for section eyebrows: "SYSTEM STATUS". */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* Tabular numerals for metrics, timestamps, IPs. */
+@utility nums {
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+/* Faint technical grid, faded toward the edges. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--color-line-strong) 45%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-line-strong) 45%, transparent) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+@utility bg-grid-fade {
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
+}
+
+/* Shimmer for skeleton loaders. */
+@utility skeleton {
+  background: linear-gradient(90deg,
+    var(--color-surface-2) 0%,
+    var(--color-surface-3) 50%,
+    var(--color-surface-2) 100%);
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+}
+
+/* Hairline gradient used on top edges of elevated panels. */
+@utility hairline-top {
+  background-image: linear-gradient(90deg,
+    transparent,
+    color-mix(in srgb, var(--color-cyan) 35%, transparent) 30%,
+    color-mix(in srgb, var(--color-violet) 35%, transparent) 70%,
+    transparent);
+}
+
+/* React Flow — dark theme overrides shared by every topology view. */
+.react-flow {
+  --xy-background-color: transparent;
+  --xy-edge-stroke-default: var(--color-line-strong);
+  --xy-node-border-radius-default: 12px;
+  --xy-controls-button-background-color-default: var(--color-surface-2);
+  --xy-controls-button-background-color-hover-default: var(--color-surface-3);
+  --xy-controls-button-color-default: var(--color-ink-2);
+  --xy-controls-button-border-color-default: var(--color-line);
+  --xy-minimap-background-color-default: var(--color-surface);
+  --xy-attribution-background-color-default: transparent;
+}
+.react-flow__attribution { display: none; }
+.react-flow__controls { border: 1px solid var(--color-line); border-radius: 10px; overflow: hidden; box-shadow: none; }

@@ -1,0 +1,29 @@
+# NEXUS — `docker compose up --build`, then open http://localhost:8080
+services:
+  backend:
+    build: ./backend
+    environment:
+      NEXUS_LOG_LEVEL: INFO
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+  # PostgreSQL is prepared (backend/db/schema.sql) but not yet used by the API.
+  # Enable with: docker compose --profile db up
+  postgres:
+    image: postgres:16-alpine
+    profiles: ["db"]
+    environment:
+      POSTGRES_DB: nexus
+      POSTGRES_USER: nexus
+      POSTGRES_PASSWORD: nexus-dev-only
+    volumes:
+      - ./backend/db/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+    ports:
+      - "5432:5432"

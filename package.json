@@ -1,0 +1,13 @@
+{
+  "name": "nexus",
+  "private": true,
+  "version": "0.2.0",
+  "description": "NEXUS — Neural Explainable Unified Security: AI-native network security research prototype",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "test": "npm run test:api && npm run test:web",
+    "test:api": "node scripts/test-api.mjs",
+    "test:web": "npm --prefix frontend run typecheck",
+    "build": "npm --prefix frontend run build"
+  }
+}
