@@ -75,7 +75,7 @@ export function PipelineStep({ stage, index, state, compact, tone }: PipelineSte
 
       <span
         className={cn(
-          'block max-w-full truncate font-mono uppercase transition-colors duration-300',
+          'block max-w-full truncate transition-colors duration-300 font-medium',
           compact ? 'mt-1.5 text-[9.5px] tracking-[0.14em]' : 'mt-2.5 text-[10.5px] tracking-[0.16em]',
           active ? t.text : state === 'pending' ? 'text-muted' : 'text-ink-2',
         )}

@@ -66,7 +66,7 @@ export function SegmentOverview() {
                 {r.counts
                   .filter((c) => c.n > 0)
                   .map((c) => (
-                    <span key={c.status} className="flex items-center gap-1.5 font-mono text-[10.5px] text-muted uppercase">
+                    <span key={c.status} className="flex items-center gap-1.5 text-[11px] text-muted font-medium">
                       <span className={cn('size-1.5 rounded-full', toneClasses[deviceStatusMeta[c.status].tone].dot)} />
                       {c.n} {deviceStatusMeta[c.status].label}
                     </span>

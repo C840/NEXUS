@@ -108,7 +108,7 @@ function FeedStatus({ paused, pendingCount }: { paused: boolean; pendingCount: n
           Paused{pendingCount > 0 && <span className="nums"> · {pendingCount} new</span>}
         </Badge>
       ) : (
-        <span className="flex items-center gap-2 font-mono text-[10px] tracking-[0.14em] whitespace-nowrap text-muted uppercase">
+        <span className="flex items-center gap-2 text-[11px] whitespace-nowrap text-muted font-medium">
           <StatusDot tone={meta.tone} pulse={connection === 'live'} size="xs" />
           {meta.label}
         </span>

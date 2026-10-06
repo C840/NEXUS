@@ -2,9 +2,8 @@ import type { ReactNode } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Zap } from 'lucide-react'
 import { ResponsePanel } from '@/components/investigation'
-import { LivePipelineStrip } from '@/components/pipeline'
 import { SecurityScorePanel } from '@/components/score'
-import { ActiveThreatsPanel, ThreatFeed, ThreatIntelPanel } from '@/components/threats'
+import { ActiveThreatsPanel, ThreatFeed } from '@/components/threats'
 import { TrafficChart } from '@/components/traffic'
 import { EmptyState, Panel } from '@/components/ui'
 import { useLatestResponse } from '@/store'
@@ -45,11 +44,8 @@ function LatestResponse() {
  */
 export default function DashboardPage() {
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <DashboardHero />
-      <Row index={1}>
-        <LivePipelineStrip compact />
-      </Row>
       <Row index={2}>
         <MetricRow />
       </Row>
@@ -61,12 +57,9 @@ export default function DashboardPage() {
         <TopologyPanel className="xl:col-span-7" />
         <SecurityScorePanel className="xl:col-span-5" />
       </Row>
-      <Row index={5} className="grid gap-5 lg:grid-cols-2 2xl:grid-cols-12">
-        <div className="lg:col-span-2 2xl:col-span-5">
-          <LatestResponse />
-        </div>
-        <ActiveThreatsPanel className="2xl:col-span-4" />
-        <ThreatIntelPanel className="2xl:col-span-3" />
+      <Row index={5} className="grid gap-5 lg:grid-cols-2">
+        <LatestResponse />
+        <ActiveThreatsPanel />
       </Row>
     </div>
   )

@@ -47,13 +47,13 @@ export function MetricCard({
     <Panel tone={alert} className={cn('flex min-w-0 flex-col gap-3 p-4', className)}>
       <div className="flex items-center justify-between gap-2">
         <p className="eyebrow truncate">{label}</p>
-        {Icon && <Icon className={cn('size-4 shrink-0', t.text)} strokeWidth={1.75} />}
+        {Icon && <Icon className="size-4 shrink-0 text-faint" strokeWidth={1.75} />}
       </div>
       <div className="flex items-baseline gap-1.5">
         <AnimatedNumber
           value={value}
           format={format}
-          className={cn('nums font-display text-[30px] leading-none font-medium tracking-tight', emphasize ? t.text : 'text-ink')}
+          className={cn('nums font-display text-[28px] leading-none font-semibold tracking-tight', emphasize ? t.text : 'text-ink')}
         />
         {unit && <span className="nums font-mono text-xs text-muted">{unit}</span>}
       </div>

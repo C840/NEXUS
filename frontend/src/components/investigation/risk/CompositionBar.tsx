@@ -78,7 +78,7 @@ export function CompositionBar({ factors, tone, thresholds = [] }: CompositionBa
             <span className="absolute top-4 bottom-0 left-0 border-l border-dashed border-ink-2/50" />
             <span
               className={cn(
-                'nums absolute top-0 font-mono text-[9.5px] tracking-wide whitespace-nowrap text-muted uppercase',
+                'nums absolute top-0 text-[9.5px] whitespace-nowrap text-muted font-medium',
                 i === 0 && sorted.length > 1 ? 'right-0 pr-1.5' : 'left-0 pl-1.5',
               )}
             >

@@ -58,7 +58,7 @@ function RunningIndicator({ simulation }: { simulation: SimulationState }) {
       onClick={() => setHudMinimized(false)}
       title={`${simulation.label} simulation in progress — show progress`}
       className={cn(
-        'inline-flex h-8 items-center gap-2 rounded-lg border px-3 font-mono text-[10.5px] tracking-[0.14em] uppercase transition-colors',
+        'inline-flex h-8 items-center gap-2 rounded-lg border px-3 text-[11px] transition-colors font-medium',
         t.softBg,
         t.softBorder,
         t.text,

@@ -26,7 +26,7 @@ export function ModelChips({ models, detectedBy }: ModelChipsProps) {
               <li key={key} className="flex min-w-0 items-center gap-2.5 rounded-lg border border-line bg-surface-2/40 px-3 py-2">
                 <Icon className="size-3.5 shrink-0 text-muted" strokeWidth={1.75} aria-hidden />
                 <div className="min-w-0">
-                  <p className="font-mono text-[9.5px] tracking-[0.14em] text-faint uppercase">{label}</p>
+                  <p className="text-[9.5px] text-faint font-medium">{label}</p>
                   <p className="truncate font-mono text-xs text-ink-2" title={models[key]}>
                     {models[key]}
                   </p>

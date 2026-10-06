@@ -92,8 +92,8 @@ export const AggregateNode = memo(function AggregateNode({ data }: NodeProps<Agg
     >
       <Handles />
       <span className="nums font-display text-[15px] leading-none font-medium text-ink-2">+{data.count}</span>
-      <span className="mt-1 font-mono text-[9px] tracking-[0.12em] text-faint uppercase">{segmentLabel[data.segment]}</span>
-      <span className="mt-0.5 flex items-center gap-1 font-mono text-[8.5px] text-safe/80 uppercase">
+      <span className="mt-1 text-[9px] text-faint font-medium">{segmentLabel[data.segment]}</span>
+      <span className="mt-0.5 flex items-center gap-1 text-[8.5px] text-safe/80 font-medium">
         <span className="size-1 rounded-full bg-safe" aria-hidden />
         normal
       </span>

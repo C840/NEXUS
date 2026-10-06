@@ -71,7 +71,7 @@ export function ResponsePanel({ response, compact, title, showInvestigateLink, c
             <StatusDot tone={state.tone} pulse={live} />
             {response.message}
           </p>
-          <p className="mt-1 font-mono text-[10.5px] tracking-[0.12em] text-muted uppercase">
+          <p className="mt-1 text-[11px] text-muted font-medium">
             {state.label}
             {response.decidedBy && ` · decided by ${response.decidedBy === 'nexus' ? 'NEXUS policy' : 'administrator'}`}
           </p>

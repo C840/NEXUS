@@ -109,7 +109,7 @@ export function AttackTimeline({ steps, orientation = 'vertical', activeIndex, c
                 <TimelineNode kind={step.kind} state={state} tone={tone} pulse={i === pulseIndex} />
                 {connector}
               </div>
-              <p className={cn('font-mono text-[9.5px] tracking-[0.14em] uppercase', pending ? 'text-faint' : toneClasses[tone].text)}>
+              <p className={cn('text-[9.5px] font-medium', pending ? 'text-faint' : toneClasses[tone].text)}>
                 {kind.label}
               </p>
               <p className={cn('mt-1 text-[13px] leading-snug font-medium', pending ? 'text-muted' : 'text-ink')}>{step.label}</p>

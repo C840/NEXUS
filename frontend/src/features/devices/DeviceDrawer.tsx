@@ -60,7 +60,7 @@ export function DeviceDrawer({ device, now, onClose }: DeviceDrawerProps) {
             <div className="space-y-2">
               <DeviceStatusBadge status={device.status} size="md" />
               <p className="text-sm text-ink-2">{device.role}</p>
-              <p className="font-mono text-[10.5px] tracking-[0.12em] text-muted uppercase">{riskLevelLabel[riskLevel(device.riskScore)]}</p>
+              <p className="text-[11px] text-muted font-medium">{riskLevelLabel[riskLevel(device.riskScore)]}</p>
             </div>
           </div>
 

@@ -1,6 +1,5 @@
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/jetbrains-mono";
-@import "@fontsource-variable/fraunces";
 @import "tailwindcss";
 
 /*
@@ -11,43 +10,40 @@
 @theme {
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
-  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  --font-display: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
 
-  /*
-   * Foundation — smoked iron and old walnut. Warm, low-contrast darks.
-   * (Token names are historical: "cyan" is the brass accent, "violet" copper, "blue" patina.)
-   */
-  --color-void: #000000;
-  --color-base: #050505;
-  --color-surface: #0a0a0a;
-  --color-surface-2: #111111;
-  --color-surface-3: #191919;
-  --color-line: #222222;
-  --color-line-strong: #333333;
+  /* Foundation — deep navy */
+  --color-void: #05070c;
+  --color-base: #080b13;
+  --color-surface: #0b101b;
+  --color-surface-2: #101725;
+  --color-surface-3: #161e2f;
+  --color-line: #1a2335;
+  --color-line-strong: #263149;
 
-  /* Text — aged parchment */
-  --color-ink: #ebe2cf;
-  --color-ink-2: #c7bba2;
-  --color-muted: #948770;
-  --color-faint: #665c4b;
+  /* Text */
+  --color-ink: #e6ebf3;
+  --color-ink-2: #b3bdcc;
+  --color-muted: #7c879a;
+  --color-faint: #4d576a;
 
-  /* Accent metals */
-  --color-cyan: #c49a5c;        /* brass */
-  --color-cyan-soft: #dcbd88;   /* polished brass */
-  --color-blue: #7d9e94;        /* verdigris patina */
-  --color-violet: #b0714f;      /* copper */
-  --color-violet-soft: #cf9677; /* rose copper */
+  /* Accent */
+  --color-cyan: #38c5e0;
+  --color-cyan-soft: #86ddee;
+  --color-blue: #5b8def;
+  --color-violet: #8b7cf0;
+  --color-violet-soft: #b3a8f6;
 
-  /* Threat / state semantics — muted pigments, still distinguishable */
-  --color-critical: #c65a46;    /* oxide red */
-  --color-high: #c9803f;        /* burnt sienna */
-  --color-medium: #b5a453;      /* olive ochre */
-  --color-low: #8299a8;         /* steel blue */
-  --color-info: #8299a8;
-  --color-safe: #7f9f6f;        /* sage */
-  --color-blocked: #7b7366;     /* pewter */
+  /* Threat / state semantics */
+  --color-critical: #f0596a;
+  --color-high: #f08c4a;
+  --color-medium: #e3bd52;
+  --color-low: #58b9db;
+  --color-info: #58b9db;
+  --color-safe: #3fbf8f;
+  --color-blocked: #6b778a;
 
-  --radius-panel: 10px;
+  --radius-panel: 12px;
 
   --animate-pulse-ring: pulse-ring 3s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
   --animate-dash-flow: dash-flow 1.2s linear infinite;
@@ -78,8 +74,6 @@
   }
   body {
     @apply bg-void text-ink font-sans antialiased;
-    background-image: radial-gradient(ellipse 90% 60% at 50% -10%, #0f0f0f 0%, transparent 70%);
-    background-attachment: fixed;
     font-feature-settings: "cv11", "ss01", "ss03";
     min-height: 100vh;
   }
@@ -105,10 +99,11 @@
 
 /* Small uppercase mono label used for section eyebrows: "SYSTEM STATUS". */
 @utility eyebrow {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  line-height: 1;
-  letter-spacing: 0.2em;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-muted);
 }
@@ -140,36 +135,13 @@
   animation: var(--animate-shimmer);
 }
 
-/* Hairline gradient used on top edges of elevated panels. */
-@utility hairline-top {
-  background-image: linear-gradient(90deg,
-    transparent,
-    color-mix(in srgb, var(--color-cyan) 28%, transparent) 50%,
-    transparent);
-}
-
-/*
- * Engraved instrument plate: a fine inner bevel plus four small rivets in the
- * corners. Quiet enough to repeat on every panel.
- */
+/* Clean card surface: faint top highlight and a soft drop shadow. */
 @utility plate {
-  background-image:
-    radial-gradient(circle at 9px 9px, color-mix(in srgb, var(--color-cyan) 30%, transparent) 1.1px, transparent 1.8px),
-    radial-gradient(circle at calc(100% - 9px) 9px, color-mix(in srgb, var(--color-cyan) 30%, transparent) 1.1px, transparent 1.8px),
-    radial-gradient(circle at 9px calc(100% - 9px), color-mix(in srgb, var(--color-cyan) 22%, transparent) 1.1px, transparent 1.8px),
-    radial-gradient(circle at calc(100% - 9px) calc(100% - 9px), color-mix(in srgb, var(--color-cyan) 22%, transparent) 1.1px, transparent 1.8px),
-    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-2) 70%, transparent), transparent 140px);
-  box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.25),
-    0 18px 40px -30px rgba(0, 0, 0, 0.9);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.025), 0 12px 32px -24px rgba(0, 0, 0, 0.8);
 }
 
-/* Display headings: Fraunces with a touch of optical softness. */
-@utility font-engraved {
-  font-family: var(--font-display);
-  font-variation-settings: "SOFT" 30, "WONK" 0;
-  letter-spacing: 0.005em;
+@utility hairline-top {
+  background-image: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-cyan) 25%, transparent) 50%, transparent);
 }
 
 /* React Flow — dark theme overrides shared by every topology view. */

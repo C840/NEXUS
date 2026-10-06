@@ -39,7 +39,7 @@ export function HudPill({ simulation, onExpand }: HudPillProps) {
       <StatusDot tone={meta.tone} pulse={meta.live} />
       <span className="truncate font-display text-[13px] font-medium text-ink">{simulation.label}</span>
       {stage && (
-        <span className="hidden truncate font-mono text-[10.5px] tracking-[0.12em] text-muted uppercase sm:inline">
+        <span className="hidden truncate text-[11px] text-muted sm:inline font-medium">
           {outcome === 'contained' ? 'Blocked · recovered' : stage.label}
         </span>
       )}

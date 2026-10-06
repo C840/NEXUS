@@ -46,7 +46,7 @@ export function AttackReplay({ replay, threatName, className }: AttackReplayProp
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_240px]">
         <div className="min-w-0">
           <div className="mb-2 flex items-baseline justify-between gap-3">
-            <p className={cn('flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase', toneClasses[markerTone].text)}>
+            <p className={cn('flex items-center gap-2 text-[11px] font-medium', toneClasses[markerTone].text)}>
               <span className={cn('size-1.5 rounded-full', toneClasses[markerTone].dot)} />
               {marker.label}
             </p>

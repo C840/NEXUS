@@ -95,7 +95,9 @@ function TopologyCanvas({ variant, selectedNodeId = null, onSelectNode, height =
 
   const interactive = variant === 'full'
   return (
-    <div ref={wrapperRef} className={cn('relative w-full', className)} style={{ height }}>
+    <div className={cn('w-full', className)}>
+      {showLegend && !interactive && <TopologyLegend counts={counts} className="mb-3" />}
+      <div ref={wrapperRef} className="relative w-full" style={{ height }}>
       <ReactFlow<TopologyFlowNode, TopologyFlowEdge>
         nodes={graph.nodes}
         edges={graph.edges}
@@ -125,7 +127,8 @@ function TopologyCanvas({ variant, selectedNodeId = null, onSelectNode, height =
           </>
         )}
       </ReactFlow>
-      {showLegend && <TopologyLegend counts={counts} className={cn('absolute left-3', interactive ? 'bottom-3' : 'top-1')} />}
+      {showLegend && interactive && <TopologyLegend counts={counts} className="absolute bottom-3 left-3" />}
+      </div>
     </div>
   )
 }

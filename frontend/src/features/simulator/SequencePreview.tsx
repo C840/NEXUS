@@ -28,7 +28,7 @@ export function SequencePreview({ autonomous }: SequencePreviewProps) {
       <ol className="mt-3.5 space-y-2">
         {groups.map(({ stage, steps: groupSteps }) => (
           <li key={stage.key} className="grid grid-cols-[112px_minmax(0,1fr)] items-center gap-3">
-            <span className="flex items-center gap-2 font-mono text-[10px] tracking-[0.14em] text-muted uppercase">
+            <span className="flex items-center gap-2 text-[11px] text-muted font-medium">
               <stage.icon aria-hidden className="size-3.5 shrink-0 text-faint" strokeWidth={1.8} />
               {stage.label}
             </span>

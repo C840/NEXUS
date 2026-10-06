@@ -31,8 +31,8 @@ export function Badge({ tone = 'neutral', variant = 'soft', size = 'sm', dot, pu
   return (
     <span
       className={cn(
-        'inline-flex shrink-0 items-center gap-1.5 rounded-md border font-mono uppercase leading-none tracking-[0.12em] whitespace-nowrap',
-        size === 'sm' ? 'h-5 px-1.5 text-[10px]' : 'h-6 px-2 text-[11px]',
+        'inline-flex shrink-0 items-center gap-1.5 rounded-md border leading-none whitespace-nowrap font-medium',
+        size === 'sm' ? 'h-5 px-1.5 text-[11px]' : 'h-6 px-2 text-xs',
         variant === 'soft' && [t.softBg, t.softBorder, t.text],
         variant === 'outline' && ['bg-transparent', t.softBorder, t.text],
         variant === 'solid' && [t.bg, 'border-transparent text-void font-semibold'],

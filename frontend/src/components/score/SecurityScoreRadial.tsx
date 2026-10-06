@@ -68,7 +68,7 @@ export function SecurityScoreRadial({
           </span>
         </div>
         {showLevel && (
-          <span className="mt-2 flex items-center gap-1.5 font-mono text-[10px] tracking-[0.16em] text-ink-2 uppercase">
+          <span className="mt-2 flex items-center gap-1.5 text-[11px] text-ink-2 font-medium">
             <StatusDot tone={level.tone} size="xs" />
             {level.label}
           </span>

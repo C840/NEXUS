@@ -83,7 +83,7 @@ export function ModeCard({
             Engaged
           </Badge>
         ) : (
-          <span className="font-mono text-[10px] tracking-[0.14em] text-faint uppercase opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+          <span className="text-[11px] text-faint opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 font-medium">
             Switch
           </span>
         )}

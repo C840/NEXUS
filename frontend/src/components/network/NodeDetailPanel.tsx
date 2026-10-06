@@ -61,7 +61,7 @@ export function NodeDetailPanel({ node, onClose, className }: NodeDetailPanelPro
         <div className="space-y-2">
           <p className="eyebrow">Status</p>
           <NodeStatusBadge status={node.status} size="md" />
-          <p className={cn('font-mono text-[10.5px] tracking-[0.12em] uppercase', toneClasses[tone].text)}>{riskLevelLabel[riskLevel(node.risk)]}</p>
+          <p className={cn('text-[11px] font-medium', toneClasses[tone].text)}>{riskLevelLabel[riskLevel(node.risk)]}</p>
         </div>
       </div>
 

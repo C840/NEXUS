@@ -25,7 +25,7 @@ export function TopBar() {
 
   return (
     <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-3 border-b border-line bg-void/75 px-6 backdrop-blur-md xl:px-8">
-      <span className="flex items-center gap-2 font-mono text-[10.5px] tracking-[0.16em] whitespace-nowrap text-muted uppercase" title={conn.label}>
+      <span className="flex items-center gap-2 text-[11px] whitespace-nowrap text-muted font-medium" title={conn.label}>
         <StatusDot tone={conn.tone} pulse={connection === 'live'} />
         <span className="hidden xl:inline">{conn.label}</span>
       </span>
@@ -43,7 +43,7 @@ export function TopBar() {
       <Link
         to="/threats"
         className={cn(
-          'hidden items-center gap-2 rounded-lg border px-2.5 py-1.5 font-mono text-[10.5px] tracking-[0.14em] whitespace-nowrap uppercase transition-colors md:flex',
+          'hidden items-center gap-2 rounded-lg border px-2.5 py-1.5 text-[11px] whitespace-nowrap transition-colors md:flex font-medium',
           activeThreats.length === 0
             ? 'border-line text-muted hover:text-ink-2'
             : critical

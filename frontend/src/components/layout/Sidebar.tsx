@@ -137,7 +137,7 @@ export function Sidebar({ collapsed, onToggleCollapsed }: SidebarProps) {
         {!collapsed ? (
           <div className="rounded-xl border border-line bg-surface/80 p-3.5">
             <p className="eyebrow mb-2">System status</p>
-            <p className={cn('flex items-center gap-2 font-mono text-xs tracking-[0.14em] uppercase', toneClasses[statusMeta.tone].text)}>
+            <p className={cn('flex items-center gap-2 text-xs font-medium', toneClasses[statusMeta.tone].text)}>
               <StatusDot tone={statusMeta.tone} pulse />
               {statusMeta.label}
             </p>

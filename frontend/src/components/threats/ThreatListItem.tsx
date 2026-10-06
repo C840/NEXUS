@@ -56,7 +56,7 @@ export function ThreatListItem({ threat, showRisk = true, className }: ThreatLis
       {showRisk && (
         <div className="w-10 shrink-0 text-right" title={`Risk ${threat.riskScore} / 100`}>
           <p className={cn('nums font-mono text-[15px] leading-none font-medium', risk.text)}>{threat.riskScore}</p>
-          <p className="mt-1 font-mono text-[9px] tracking-[0.16em] text-faint uppercase">Risk</p>
+          <p className="mt-1 text-[9px] text-faint font-medium">Risk</p>
         </div>
       )}
 

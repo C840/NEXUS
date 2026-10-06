@@ -46,7 +46,7 @@ export function HudPanel({ simulation, onMinimize }: HudPanelProps) {
       <span aria-hidden className="pointer-events-none absolute inset-x-10 top-0 h-px hairline-top" />
 
       <header className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 pt-3.5">
-        <span className={cn('flex items-center gap-2 font-mono text-[10px] tracking-[0.16em] uppercase', toneClasses[statusTone].text)}>
+        <span className={cn('flex items-center gap-2 text-[11px] font-medium', toneClasses[statusTone].text)}>
           <StatusDot tone={statusTone} pulse={meta.live} />
           {meta.label}
         </span>

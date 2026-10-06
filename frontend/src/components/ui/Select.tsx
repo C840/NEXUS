@@ -28,7 +28,7 @@ export function Select<T extends string>({ value, options, onChange, label, clas
         className,
       )}
     >
-      {label && <span className="font-mono text-[10px] tracking-[0.14em] text-faint uppercase">{label}</span>}
+      {label && <span className="text-[11px] text-faint font-medium">{label}</span>}
       <select
         id={id}
         value={value}

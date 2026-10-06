@@ -77,7 +77,7 @@ export const ThreatFeedRow = memo(function ThreatFeedRow({ event, reducedMotion 
 function PrimaryContent({ event, tone }: { event: SecurityEvent; tone: ToneClassSet }) {
   return (
     <div className={cn(GRID, 'gap-y-1')}>
-      <span className={cn('font-mono text-[10px] font-medium tracking-[0.14em] uppercase', tone.text)}>
+      <span className={cn('text-[11px] font-medium', tone.text)}>
         {severityMeta[event.severity].label}
       </span>
       <span className="truncate text-[13px] font-medium text-ink">{event.title}</span>
@@ -98,7 +98,7 @@ function PrimaryContent({ event, tone }: { event: SecurityEvent; tone: ToneClass
 function SecondaryContent({ event }: { event: SecurityEvent }) {
   return (
     <div className={GRID}>
-      <span className="font-mono text-[9.5px] tracking-[0.14em] text-faint uppercase">{eventTypeLabel[event.type]}</span>
+      <span className="text-[9.5px] text-faint font-medium">{eventTypeLabel[event.type]}</span>
       <p className="min-w-0 truncate text-xs" title={event.message}>
         <span className="text-ink-2">{event.title}</span>
         {event.message && <span className="text-faint"> · {event.message}</span>}

@@ -47,7 +47,7 @@ export function Modal({ open, onClose, eyebrow, title, description, children, fo
           <motion.div
             className={cn(
               'relative flex max-h-[calc(100vh-4rem)] w-full flex-col overflow-hidden rounded-2xl border border-line-strong bg-surface',
-              'shadow-[0_40px_120px_-20px_rgba(0,0,0,0.9),0_0_0_1px_rgba(196,154,92,0.08)]',
+              'shadow-[0_40px_120px_-20px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.04)]',
               WIDTHS[size],
               className,
             )}

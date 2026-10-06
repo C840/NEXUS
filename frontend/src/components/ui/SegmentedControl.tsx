@@ -37,7 +37,7 @@ export function SegmentedControl<T extends string>({ options, value, onChange, s
             aria-selected={active}
             onClick={() => onChange(opt.value)}
             className={cn(
-              'relative isolate flex items-center gap-1.5 rounded-md font-mono uppercase tracking-[0.12em] transition-colors',
+              'relative isolate flex items-center gap-1.5 rounded-md transition-colors font-medium',
               size === 'sm' ? 'h-6 px-2.5 text-[10.5px]' : 'h-7 px-3 text-[11px]',
               active ? 'text-ink' : 'text-faint hover:text-ink-2',
             )}

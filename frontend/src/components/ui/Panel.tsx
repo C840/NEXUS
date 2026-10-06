@@ -29,9 +29,6 @@ export function Panel({ tone, flush, hairline = true, as: Tag = 'section', class
       )}
       {...rest}
     >
-      {hairline && (
-        <span aria-hidden className="pointer-events-none absolute inset-x-8 top-0 h-px hairline-top opacity-70" />
-      )}
       {children}
     </Tag>
   )
@@ -53,20 +50,11 @@ export function PanelHeader({ eyebrow, title, description, icon: Icon, iconTone 
   return (
     <header className={cn('mb-4 flex flex-wrap items-start justify-between gap-x-4 gap-y-3', className)}>
       <div className="flex min-w-0 flex-1 basis-[13rem] items-start gap-3">
-        {Icon && (
-          <span
-            className={cn(
-              'mt-0.5 grid size-8 shrink-0 place-items-center rounded-lg border',
-              toneClasses[iconTone].softBg,
-              toneClasses[iconTone].softBorder,
-            )}
-          >
-            <Icon className={cn('size-4', toneClasses[iconTone].text)} strokeWidth={1.75} />
-          </span>
-        )}
+        {Icon && <Icon className={cn('mt-0.5 size-4 shrink-0', toneClasses[iconTone].text)} strokeWidth={1.75} aria-hidden />}
         <div className="min-w-0">
-          {eyebrow && <p className="eyebrow mb-1.5">{eyebrow}</p>}
-          {title && <h3 className="truncate font-display text-[15px] font-medium tracking-tight text-ink">{title}</h3>}
+          {/* Minimal header: the title carries the meaning; the eyebrow shows only when there is no title. */}
+          {eyebrow && !title && <p className="eyebrow mb-1.5">{eyebrow}</p>}
+          {title && <h3 className="truncate text-[14px] font-semibold text-ink">{title}</h3>}
           {description && <p className="mt-1 text-xs leading-relaxed text-muted">{description}</p>}
         </div>
       </div>

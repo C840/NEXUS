@@ -39,7 +39,7 @@ export function BusiestLinks({ onSelect }: { onSelect: (nodeId: string) => void 
                   <span className={cn('block h-full rounded-full', l.status === 'normal' ? 'bg-cyan/60' : t.bg)} style={{ width: `${Math.max(4, l.share * 100)}%` }} />
                 </span>
                 <span className="nums w-24 shrink-0 text-right font-mono text-[12px] text-ink-2">{l.throughputMbps.toFixed(1)} Mbps</span>
-                <span className={cn('w-24 shrink-0 text-right font-mono text-[10px] tracking-[0.12em] uppercase', t.text)}>{meta.label}</span>
+                <span className={cn('w-24 shrink-0 text-right text-[11px] font-medium', t.text)}>{meta.label}</span>
               </button>
             </li>
           )

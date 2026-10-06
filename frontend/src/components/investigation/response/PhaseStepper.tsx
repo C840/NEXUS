@@ -37,10 +37,10 @@ export function PhaseStepper({ phases, compact }: { phases: ResponsePhase[]; com
                 {phase.status === 'active' && !reduced && <span aria-hidden className={cn('absolute inset-0 rounded-full animate-pulse-ring', t.bg)} />}
                 <Icon className="relative size-4" strokeWidth={1.9} aria-hidden />
               </span>
-              <span className={cn('mt-2 font-mono text-[10.5px] tracking-[0.16em] uppercase', phase.status === 'pending' ? 'text-faint' : 'text-ink')}>
+              <span className={cn('mt-2 text-[11px] font-medium', phase.status === 'pending' ? 'text-faint' : 'text-ink')}>
                 {phase.label}
               </span>
-              <span className={cn('mt-0.5 font-mono text-[9.5px] tracking-wide uppercase', t.text)}>{meta.label}</span>
+              <span className={cn('mt-0.5 text-[9.5px] font-medium', t.text)}>{meta.label}</span>
               {!compact && <span className="mt-1.5 px-1 text-[11px] leading-snug text-muted">{phase.detail}</span>}
             </li>
             {next && (

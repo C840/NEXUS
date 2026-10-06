@@ -58,7 +58,7 @@ export function RelatedEvents({ threatId, className }: { threatId: string; class
                 <p className="text-[13px] text-ink">{e.title}</p>
                 <p className="truncate text-xs text-muted">{e.message}</p>
               </div>
-              {e.outcome && <span className="ml-auto shrink-0 font-mono text-[10.5px] tracking-wide text-ink-2 uppercase">{e.outcome}</span>}
+              {e.outcome && <span className="ml-auto shrink-0 text-[11px] text-ink-2 font-medium">{e.outcome}</span>}
             </li>
           ))}
         </ul>

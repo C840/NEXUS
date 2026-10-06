@@ -40,7 +40,7 @@ function SensitivityRow({ settings, onChange }: PolicyControlsProps) {
           transition={{ duration: 0.18 }}
           className="mt-3 text-xs leading-relaxed text-ink-2"
         >
-          <span className="font-mono text-[10.5px] tracking-[0.14em] text-cyan uppercase">{info.label}</span>
+          <span className="text-[11px] text-cyan font-medium">{info.label}</span>
           <span className="text-faint"> · </span>
           {info.summary}
         </motion.p>

@@ -53,7 +53,7 @@ export function ApproachComparison() {
                 >
                   <span
                     className={cn(
-                      'rounded-md border px-2.5 py-1.5 font-mono text-[10.5px] leading-none tracking-[0.14em] uppercase',
+                      'rounded-md border px-2.5 py-1.5 text-[11px] leading-none font-medium',
                       lane.chip,
                     )}
                   >

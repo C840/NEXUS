@@ -25,7 +25,7 @@ export function SaveIndicator({ state }: { state: SaveState }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -3 }}
           transition={{ duration: 0.15 }}
-          className={cn('inline-flex items-center gap-1.5 font-mono text-[10.5px] tracking-[0.14em] uppercase', toneClasses[meta.tone].text)}
+          className={cn('inline-flex items-center gap-1.5 text-[11px] font-medium', toneClasses[meta.tone].text)}
         >
           <Icon className={cn('size-3.5', meta.spin && 'animate-spin')} strokeWidth={1.9} aria-hidden />
           {meta.label}

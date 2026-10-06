@@ -24,7 +24,7 @@ export function ConfusionMatrix({ labels, matrix }: ConfusionMatrixProps) {
         <table className="w-full border-separate border-spacing-1 text-center">
           <thead>
             <tr>
-              <th className="w-24 text-left font-mono text-[9.5px] font-normal tracking-[0.14em] text-faint uppercase">Actual ↓ / Pred →</th>
+              <th className="w-24 text-left text-[9.5px] font-normal text-faint font-medium">Actual ↓ / Pred →</th>
               {labels.map((l) => (
                 <th key={l} className="px-1 pb-1 font-mono text-[10px] font-normal tracking-wide text-muted">
                   {l}

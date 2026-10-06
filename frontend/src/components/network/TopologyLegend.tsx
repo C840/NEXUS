@@ -12,7 +12,7 @@ export function TopologyLegend({ counts, className }: { counts?: Partial<Record<
       {ORDER.map((status) => {
         const meta = nodeStatusMeta[status]
         return (
-          <span key={status} className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.1em] text-muted uppercase">
+          <span key={status} className="flex items-center gap-1.5 text-[11px] text-muted font-medium">
             <span className={cn('size-2 rounded-full', toneClasses[meta.tone].dot, status === 'blocked' && 'opacity-80')} aria-hidden />
             {meta.label}
             {counts?.[status] !== undefined && <span className="nums text-ink-2">{counts[status]}</span>}

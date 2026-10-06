@@ -15,7 +15,7 @@ export function ViewAllLink({ to, children, className }: ViewAllLinkProps) {
     <Link
       to={to}
       className={cn(
-        'inline-flex items-center gap-1 rounded font-mono text-[10.5px] tracking-[0.14em] whitespace-nowrap text-muted uppercase transition-colors hover:text-cyan',
+        'inline-flex items-center gap-1 rounded text-[11px] whitespace-nowrap text-muted transition-colors hover:text-cyan font-medium',
         className,
       )}
     >
