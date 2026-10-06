@@ -1,0 +1,186 @@
+{
+  "real_benign_windows": 128,
+  "features": [
+    "out_pps",
+    "out_bps",
+    "mean_pkt_size",
+    "uniq_dst_ports",
+    "uniq_dst_ips",
+    "syn_rate",
+    "syn_only_ratio",
+    "rst_ratio",
+    "udp_share",
+    "dns_rate",
+    "dns_entropy",
+    "nxdomain_ratio",
+    "in_pps",
+    "uniq_src_ips",
+    "out_in_ratio"
+  ],
+  "E1_in_distribution": {
+    "note": "train() on 75% of real benign windows; test = the held-out 25% of real benign + synthetic attacks injected into those held-out windows",
+    "accuracy_mean": 0.9981,
+    "accuracy_sd": 0.0025,
+    "macro_f1_mean": 0.9969,
+    "macro_f1_sd": 0.0038,
+    "per_class_seed0": {
+      "benign": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 32
+      },
+      "port_scan": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 150
+      },
+      "brute_force": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 150
+      },
+      "dns_anomaly": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 150
+      },
+      "ddos": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 150
+      }
+    },
+    "confusion_seed0": [
+      [
+        32,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        150,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        150,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        150,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        150
+      ]
+    ]
+  },
+  "E2_cross_domain": {
+    "trained_on": "generic synthetic benign",
+    "tested_on": "real benign of this network + attacks injected into it",
+    "accuracy": 0.9986,
+    "macro_f1": 0.9986,
+    "benign_recall": 0.9922,
+    "alert_rate_on_real_benign_generic_model": 0.0781,
+    "alert_rate_on_real_benign_network_model_in_sample": 0.0
+  },
+  "E3_false_alerts_heldout_real": {
+    "windows_tested": 128,
+    "alert_rate_mean": 0.0,
+    "alert_rate_per_fold": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "share_above_anomaly_threshold_0.72": 0.008
+  },
+  "E4_low_intensity": {
+    "port_scan_5_to_25_ports": {
+      "alert_recall": 0.2333,
+      "classified_as_attack": 0.7333
+    },
+    "brute_force_0.3_to_2_attempts_per_s": {
+      "alert_recall": 0.0733,
+      "classified_as_attack": 1.0
+    },
+    "ddos_150_to_800_pps_10_to_40_sources": {
+      "alert_recall": 0.0,
+      "classified_as_attack": 0.0
+    },
+    "dns_0.4_to_1.5_queries_per_s": {
+      "alert_recall": 0.08,
+      "classified_as_attack": 1.0
+    }
+  },
+  "E5_rule_ablation": {
+    "classifier": {
+      "attack_alert_recall": 0.9975,
+      "benign_alert_rate_in_sample": 0.0,
+      "generic_model_benign_alert_rate_on_real": 0.0
+    },
+    "anomaly": {
+      "attack_alert_recall": 0.4713,
+      "benign_alert_rate_in_sample": 0.0,
+      "generic_model_benign_alert_rate_on_real": 0.0859
+    },
+    "combined": {
+      "attack_alert_recall": 0.4713,
+      "benign_alert_rate_in_sample": 0.0,
+      "generic_model_benign_alert_rate_on_real": 0.0781
+    },
+    "per_class_alert_recall": {
+      "port_scan": {
+        "classifier": 1.0,
+        "combined": 1.0,
+        "mean_anomaly_score": 0.732
+      },
+      "brute_force": {
+        "classifier": 0.995,
+        "combined": 0.765,
+        "mean_anomaly_score": 0.628
+      },
+      "dns_anomaly": {
+        "classifier": 1.0,
+        "combined": 0.175,
+        "mean_anomaly_score": 0.538
+      },
+      "ddos": {
+        "classifier": 1.0,
+        "combined": 0.065,
+        "mean_anomaly_score": 0.477
+      }
+    }
+  },
+  "E6_shap_top3_includes_injected_feature": {
+    "port_scan": 1.0,
+    "brute_force": 1.0,
+    "dns_anomaly": 1.0,
+    "ddos": 1.0
+  },
+  "E7_latency_ms": {
+    "feature_extraction_5000_packets_20_hosts": 4.09,
+    "inference_20_host_windows": 13.99,
+    "shap_one_detection": 1.06,
+    "full_training": 304.4
+  }
+}
