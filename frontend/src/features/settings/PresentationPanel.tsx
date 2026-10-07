@@ -20,7 +20,7 @@ export function PresentationPanel() {
         <div className="flex items-center gap-4 py-3">
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-ink">Demo mode</p>
-            <p className="text-xs text-muted">A 14-step guided walkthrough with a short explanation and talking point for each feature. Also in the top bar.</p>
+            <p className="text-xs text-muted">A 14-step guided walkthrough with a short explanation of each feature. Also in the top bar.</p>
           </div>
           <Toggle checked={demo} onChange={(on) => prefsActions.setDemo(on)} label="Demo mode" />
         </div>
