@@ -76,6 +76,10 @@ export function createHttpApi(): NexusApi {
     startLive: (iface) => post('/api/live/start', iface ? { interface: iface } : {}),
     stopLive: () => post('/api/live/stop', {}),
     retrainLive: () => post('/api/live/train', {}),
+    runLiveTest: (kind = 'port_scan') => post('/api/live/test', { kind }),
+    markFalsePositive: (id) => post(`/api/threats/${encodeURIComponent(id)}/false-positive`, {}),
+    getAllowlist: () => request('/api/live/allowlist'),
+    removeFromAllowlist: (ip) => request(`/api/live/allowlist/${encodeURIComponent(ip)}`, { method: 'DELETE' }),
   }
 }
 

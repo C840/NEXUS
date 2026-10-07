@@ -32,12 +32,14 @@ from app.schemas import DataSourceInfo, FeatureContribution, TrafficPoint
 from .capture import PacketCapture, capture_available, list_interfaces
 from .features import FEATURE_BY_KEY, FEATURE_KEYS, WINDOW_SEC, PacketRecord, in_networks, is_local, parse_networks, vector, window_features
 from .models import MIN_REAL_WINDOWS, DetectionModels
+from .store import DB_FILE, LiveStore
 
 if TYPE_CHECKING:
     from app.engine.service import NexusService
+    from app.engine.threats import ThreatRecord
 
 log = logging.getLogger("nexus.live")
-DATA_DIR = Path(__file__).resolve().parents[2] / "data"
+DATA_DIR = Path(os.getenv("NEXUS_DATA_DIR", str(Path(__file__).resolve().parents[2] / "data")))
 BASELINE_FILE = DATA_DIR / "live_baseline.npy"
 
 NAMES = {"port_scan": "Port Scan", "brute_force": "Brute Force", "dns_anomaly": "DNS Anomaly", "ddos": "DDoS Attack", "unknown_anomaly": "Unknown Anomaly"}
@@ -70,6 +72,10 @@ class LiveEngine:
         self.history: deque[TrafficPoint] = deque(maxlen=120)  # last 2 minutes, for the LIVE chart
         self._recent_anomaly = deque(maxlen=10)
         self._task: Optional[asyncio.Task[None]] = None
+        self.store = LiveStore(Path(os.getenv("NEXUS_DB_FILE", str(DB_FILE))))
+        self.allowed: set[str] = {str(r["ip"]) for r in self.store.allowlist()}
+        self._test_hosts: set[str] = set()
+        self._restore()
 
     # ------------------------------------------------------------ status
 
@@ -276,7 +282,7 @@ class LiveEngine:
             return
 
         for i, (ip, p) in enumerate(zip(ips, preds)):
-            if in_networks(ip, self.ignore):
+            if in_networks(ip, self.ignore) or ip in self.allowed:
                 continue
             label: Optional[str] = None
             if p.label != "benign" and p.confidence >= ALERT_CONFIDENCE and p.anomaly >= ALERT_ANOMALY:
@@ -361,6 +367,8 @@ class LiveEngine:
                 f"The XGBoost classifier (trained on this network's baseline plus synthetic attack profiles) assigned {conf_pct:.1f}% confidence; "
                 f"the Isolation Forest anomaly score was {anomaly:.2f}. Attributions are normalized SHAP values."
             )
+        if ip in self._test_hosts:
+            explanation = "Test replay — a recorded attack pattern was fed to the live models; no packets were sent. " + explanation
         if outcome == "blocked":
             explanation += f" Risk {risk} exceeded the auto-response threshold ({settings.auto_response_threshold}); enforcement is simulated in this prototype."
         elif outcome == "monitoring":
@@ -386,9 +394,83 @@ class LiveEngine:
         )
         record = make_record(spec, next_threat_id(s))
         record.extra["live"] = True
+        record.extra["host"] = ip
+        record.extra["vector"] = vec
+        record.extra["db_id"] = self.store.add_detection(spec)
         add_record(s, record)
         self.detections.append(record.threat.id)
         self.service.bus.publish(message("threat.upsert", threat=record.threat))
         self.service.publish_event(detection_event(record.threat))
         self.service.publish_metrics()
         log.info("live detection %s: %s from %s (conf %.2f, anomaly %.2f, risk %d)", record.threat.id, label, ip, confidence, anomaly, risk)
+
+
+    # ------------------------------------------------------------ persistence, analyst feedback, test replay
+
+    def _restore(self) -> None:
+        """Re-add live detections saved by earlier runs (re-numbered so they never clash with new ids)."""
+        s = self.service.state
+        for row_id, spec, status in self.store.detections():
+            try:
+                record = make_record(spec, next_threat_id(s))
+            except Exception:
+                log.warning("skipping unreadable saved detection %s", row_id)
+                continue
+            record.extra.update({"live": True, "db_id": row_id, "restored": True, "host": spec.target.ip if spec.attack == "ddos" else spec.source.ip})
+            if status:
+                record.threat = record.threat.model_copy(update={"status": status})
+            add_record(s, record)
+            self.detections.append(record.threat.id)
+        if self.detections:
+            log.info("restored %d saved live detections", len(self.detections))
+
+    async def mark_false_positive(self, record: "ThreatRecord") -> dict[str, object]:
+        """Analyst says this live detection was benign: allowlist the host, learn the window, dismiss the threat."""
+        host = str(record.extra.get("host", ""))
+        if host:
+            self.store.allow(host, f"false positive on {record.threat.id} ({record.threat.name})")
+            self.allowed.add(host)
+        vec = record.extra.get("vector")
+        learned = False
+        if vec is not None and host not in self._test_hosts:
+            self._baseline_rows.append([float(v) for v in vec])  # type: ignore[union-attr]
+            self._save_baseline()
+            learned = True
+        db_id = record.extra.get("db_id")
+        if isinstance(db_id, int):
+            self.store.set_status(db_id, "dismissed")
+        if learned and self.models.ready and len(self._baseline_rows) >= MIN_REAL_WINDOWS:
+            await self.retrain()
+        return {"host": host, "allowlisted": bool(host), "learned": learned}
+
+    def unallow(self, ip: str) -> None:
+        self.store.disallow(ip)
+        self.allowed.discard(ip)
+
+    async def replay_test(self, kind: str = "port_scan") -> str:
+        """Feed a recorded attack pattern to the real models. Nothing is sent on the network."""
+        if kind != "port_scan":
+            raise RuntimeError(f"Unknown test pattern '{kind}'")
+        await self.ensure_models()
+        host = "192.0.2.66"  # TEST-NET-1 (RFC 5737): reserved for documentation, never a real host
+        self._test_hosts.add(host)
+        self.unallow(host)
+        self._last_alert.pop((host, kind), None)
+        now = time.time()
+        records = [
+            PacketRecord(now + i * 0.004, host, f"192.0.2.{10 + i % 30}", "tcp", 60, 41000 + i % 7, 1 + i, syn=True)
+            for i in range(900)
+        ]
+        before = len(self.detections)
+        previous_phase = self.phase
+        self.phase = "detecting"
+        saved_window = self._window
+        self._window = records
+        try:
+            await self._close_window()
+        finally:
+            self._window = saved_window if self.running else []
+            self.phase = previous_phase
+        if len(self.detections) == before:
+            raise RuntimeError("The test pattern was scored but did not cross the alert thresholds.")
+        return self.detections[-1]

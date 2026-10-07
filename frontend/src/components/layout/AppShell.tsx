@@ -1,7 +1,10 @@
 import { Suspense } from 'react'
 import { Outlet, useLocation } from 'react-router'
 import { motion } from 'framer-motion'
+import { DemoGuide } from '@/features/demo/DemoGuide'
 import { SimulationHud } from '@/features/simulator'
+import { CommandPalette } from './CommandPalette'
+import { ThreatNotifier } from './ThreatNotifier'
 import { usePersistentState } from '@/hooks/usePersistentState'
 import { Sidebar } from './Sidebar'
 import { Toaster } from './Toaster'
@@ -31,6 +34,9 @@ export function AppShell() {
         </main>
       </div>
       <SimulationHud />
+      <DemoGuide />
+      <CommandPalette />
+      <ThreatNotifier />
       <Toaster />
     </div>
   )

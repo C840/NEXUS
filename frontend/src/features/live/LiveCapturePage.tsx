@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router'
-import { Activity, AlertTriangle, BrainCircuit, Cpu, Play, Radio, RefreshCw, Square, Wifi } from 'lucide-react'
+import { Link, useNavigate } from 'react-router'
+import { Activity, AlertTriangle, BrainCircuit, Cpu, FlaskConical, Play, Radio, RefreshCw, ShieldCheck, Square, Wifi, X } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { PageSkeleton } from '@/components/layout/PageSkeleton'
 import {
@@ -85,7 +85,9 @@ const HOST_COLUMNS: Column<LiveHost>[] = [
 export default function LiveCapturePage() {
   const query = useApiQuery(() => api.getLiveStatus(), [])
   const [status, setStatus] = useState<LiveStatus>()
-  const [busy, setBusy] = useState<'start' | 'stop' | 'train' | null>(null)
+  const [busy, setBusy] = useState<'start' | 'stop' | 'train' | 'test' | null>(null)
+  const navigate = useNavigate()
+  const allowlist = useApiQuery(() => api.getAllowlist(), [])
   const [iface, setIface] = useState<string>('')
   const threats = useThreats()
 
@@ -122,6 +124,28 @@ export default function LiveCapturePage() {
       query.refetch()
     } finally {
       setBusy(null)
+    }
+  }
+
+  const runTest = async () => {
+    setBusy('test')
+    try {
+      const { threatId } = await api.runLiveTest('port_scan')
+      nexusActions.notify({ tone: 'success', title: 'Test detection raised', message: `${threatId} — opening the investigation.` })
+      navigate(`/threats/${threatId}`)
+    } catch (err) {
+      nexusActions.notify({ tone: 'critical', title: 'Test did not raise a detection', message: err instanceof Error ? err.message : String(err) })
+    } finally {
+      setBusy(null)
+    }
+  }
+
+  const unallow = async (ip: string) => {
+    try {
+      await api.removeFromAllowlist(ip)
+      allowlist.refetch()
+    } catch (err) {
+      nexusActions.notify({ tone: 'critical', title: 'Could not remove host', message: err instanceof Error ? err.message : String(err) })
     }
   }
 
@@ -168,6 +192,16 @@ export default function LiveCapturePage() {
             )}
             <Button variant="outline" icon={RefreshCw} loading={busy === 'train' || status.phase === 'training'} onClick={() => void run('train')}>
               Retrain
+            </Button>
+            <Button
+              variant="secondary"
+              icon={FlaskConical}
+              loading={busy === 'test'}
+              disabled={!status.model.ready && !status.available}
+              title="Feeds a recorded port-scan pattern to the live models. No packets are sent on your network."
+              onClick={() => void runTest()}
+            >
+              Test detection
             </Button>
           </div>
         }
@@ -305,6 +339,31 @@ export default function LiveCapturePage() {
           </ul>
         </Panel>
       </div>
+
+      <Panel className="mt-5">
+        <PanelHeader
+          title="Allowlisted hosts"
+          description="Hosts you marked as false positives. They are still scored and shown, but never raise alerts."
+          icon={ShieldCheck}
+          iconTone="safe"
+        />
+        {allowlist.data && allowlist.data.length > 0 ? (
+          <ul className="divide-y divide-line">
+            {allowlist.data.map((a) => (
+              <li key={a.ip} className="flex items-center gap-3 py-2.5">
+                <span className="font-mono text-xs text-ink">{a.ip}</span>
+                <span className="min-w-0 flex-1 truncate text-xs text-muted">{a.reason}</span>
+                <span className="hidden text-xs text-faint sm:inline">{formatRelative(a.added * 1000)}</span>
+                <Button variant="ghost" size="xs" icon={X} onClick={() => void unallow(a.ip)} aria-label={`Remove ${a.ip} from the allowlist`}>
+                  Remove
+                </Button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-muted">No hosts yet. Use “False positive” on a live detection to add one.</p>
+        )}
+      </Panel>
     </>
   )
 }

@@ -26,6 +26,20 @@ export interface LiveModelInfo {
   classes: string[]
 }
 
+export interface AllowlistEntry {
+  ip: string
+  reason: string
+  /** Unix seconds. */
+  added: number
+}
+
+export interface FalsePositiveResult {
+  host: string | null
+  allowlisted: boolean
+  /** The window was added to the network baseline and the models retrained. */
+  learned: boolean
+}
+
 export interface LiveStatus {
   available: boolean
   reason: string | null

@@ -5,6 +5,7 @@ import { AboutPanel } from './AboutPanel'
 import { AutonomousDefensePanel } from './AutonomousDefensePanel'
 import { DataSourcePanel } from './DataSourcePanel'
 import { EngineModulesPanel } from './EngineModulesPanel'
+import { PresentationPanel } from './PresentationPanel'
 import { ResponsePolicyPanel } from './ResponsePolicyPanel'
 
 /** Settings — autonomy policy, response thresholds and the state of every engine module. */
@@ -22,6 +23,7 @@ export default function SettingsPage() {
         <div className="space-y-5">
           <AutonomousDefensePanel />
           <ResponsePolicyPanel />
+          <PresentationPanel />
           <DataSourcePanel fallback={systemInfo.data?.dataSource} />
         </div>
         <div className="space-y-5">

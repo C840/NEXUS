@@ -68,6 +68,17 @@ must be installed). It prints a link of the form `https://c840.github.io/NEXUS/?
 `share-link.txt`. The site works only while that command runs. The tunnel URL and access token change every run,
 and without the token the backend rejects remote requests.
 
+### Analyst tools
+
+- **Test detection** (Live Capture) feeds a recorded port-scan pattern to the live models — a real detection with SHAP
+  explanations, without sending any packets on your network.
+- **False positive** (threat page) dismisses a live detection, allowlists the host and learns the window as normal;
+  manage the allowlist on Live Capture.
+- **Report / PDF** (threat page) downloads a Markdown incident report or opens a print-ready copy.
+- **Ctrl+K** searches threats, IPs, devices and pages. **Bell** turns on desktop notifications for critical and
+  high threats. **Demo** turns the six-step guided walkthrough on or off (also in Settings).
+- Live detections and the allowlist are saved in `backend/data/nexus.db` (gitignored) and survive restarts.
+
 ### LLM assistant (optional)
 
 Set `GROQ_API_KEY` (and optionally `NEXUS_LLM_MODEL`, default `openai/gpt-oss-120b`) in `backend/.env`.

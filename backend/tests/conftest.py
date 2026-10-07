@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import os
+import tempfile
 from collections.abc import Iterator
 
 # Tests are hermetic: no LLM calls, no packet capture.
 os.environ["GROQ_API_KEY"] = ""
 os.environ["NEXUS_CAPTURE_AUTOSTART"] = "0"
+os.environ["NEXUS_DB_FILE"] = ":memory:"
+os.environ["NEXUS_DATA_DIR"] = tempfile.mkdtemp(prefix="nexus-test-")
 
 import pytest
 from fastapi.testclient import TestClient

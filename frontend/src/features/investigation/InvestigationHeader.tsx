@@ -1,14 +1,40 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Bot, Network } from 'lucide-react'
+import { ArrowLeft, Bot, FileDown, Network, Printer, ThumbsDown } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { attackMeta, severityMeta } from '@/lib/severity'
 import { toneClasses } from '@/lib/theme'
 import { Badge, Button, SeverityBadge, ThreatStatusBadge } from '@/components/ui'
+import { downloadText, printReport, threatReportMarkdown } from '@/lib/report'
+import { api } from '@/services'
+import { nexusActions } from '@/store'
 import type { ThreatDetail } from '@/types'
 
-export function InvestigationHeader({ threat }: { threat: ThreatDetail }) {
+export function InvestigationHeader({ threat, onChanged }: { threat: ThreatDetail; onChanged?: () => void }) {
   const navigate = useNavigate()
+  const [marking, setMarking] = useState(false)
+  const dismissed = threat.status === 'dismissed'
+
+  const markFalsePositive = async () => {
+    if (!window.confirm(`Mark ${threat.id} as a false positive? NEXUS will dismiss it and stop alerting on this host.`)) return
+    setMarking(true)
+    try {
+      const r = await api.markFalsePositive(threat.id)
+      nexusActions.notify({
+        tone: 'success',
+        title: 'Marked as false positive',
+        message: r.allowlisted ? `${r.host} will no longer raise alerts${r.learned ? '; models retrained on it' : ''}.` : 'Threat dismissed.',
+      })
+      onChanged?.()
+    } catch (err) {
+      nexusActions.notify({ tone: 'critical', title: 'Could not mark as false positive', message: err instanceof Error ? err.message : String(err) })
+    } finally {
+      setMarking(false)
+    }
+  }
+  const report = () => threatReportMarkdown(threat)
+
   const Icon = attackMeta[threat.type].icon
   const tone = severityMeta[threat.severity].tone
 
@@ -50,6 +76,17 @@ export function InvestigationHeader({ threat }: { threat: ThreatDetail }) {
           <Button variant="secondary" size="sm" icon={Bot} onClick={() => navigate(`/assistant?q=${encodeURIComponent(`Explain threat ${threat.id}`)}`)}>
             Ask the assistant
           </Button>
+          <Button variant="outline" size="sm" icon={FileDown} title="Download a Markdown incident report" onClick={() => downloadText(`${threat.id}-incident-report.md`, report())}>
+            Report
+          </Button>
+          <Button variant="outline" size="sm" icon={Printer} title="Open a print-ready report (save as PDF)" onClick={() => printReport(report(), `${threat.id} incident report`)}>
+            PDF
+          </Button>
+          {!dismissed && (
+            <Button variant="ghost" size="sm" icon={ThumbsDown} loading={marking} onClick={() => void markFalsePositive()}>
+              False positive
+            </Button>
+          )}
         </div>
       </div>
     </motion.header>

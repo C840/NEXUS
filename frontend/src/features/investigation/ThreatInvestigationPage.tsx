@@ -35,7 +35,7 @@ export default function ThreatInvestigationPage() {
 
   return (
     <>
-      <InvestigationHeader threat={detail} />
+      <InvestigationHeader threat={detail} onChanged={refetch} />
       <KeyFacts threat={detail} />
 
       <div className="space-y-5">

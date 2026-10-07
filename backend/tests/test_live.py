@@ -7,6 +7,7 @@ same code paths the sniffer uses.
 from __future__ import annotations
 
 import asyncio
+import copy
 from pathlib import Path
 
 import numpy as np
@@ -131,3 +132,49 @@ def test_ignored_virtual_networks_never_alert(models: DetectionModels) -> None:
     asyncio.run(engine._close_window())
     assert len(service.state.records) == before
     assert docker in engine.hosts  # still scored and visible
+
+
+def test_replay_test_raises_explained_detection_without_network(models: DetectionModels) -> None:
+    service = NexusService()
+    service.live.models = models
+    threat_id = asyncio.run(service.live.replay_test("port_scan"))
+    detail = service.threat_detail(threat_id)
+    assert detail.type == "port_scan" and detail.explanation.startswith("Test replay")
+    assert "192.0.2.66" in detail.source_ip or "192.0.2.66" in detail.explanation
+
+
+def test_false_positive_allowlists_host_and_dismisses(models: DetectionModels) -> None:
+    service = NexusService()
+    engine = service.live
+    engine.models = copy.deepcopy(models)  # false-positive feedback retrains the model
+    engine.phase = "detecting"
+    engine._window = scan_records()
+    asyncio.run(engine._close_window())
+    threat_id = engine.detections[-1]
+    result = asyncio.run(service.mark_false_positive(threat_id))
+    assert result["allowlisted"] and result["host"] == SCANNER
+    assert service.state.by_id[threat_id].threat.status == "dismissed"
+    assert SCANNER in engine.allowed and any(r["ip"] == SCANNER for r in engine.store.allowlist())
+    # The same host no longer alerts, even after the debounce window.
+    engine._last_alert.clear()
+    before = len(service.state.records)
+    engine._window = scan_records(10.0)
+    asyncio.run(engine._close_window())
+    assert len(service.state.records) == before
+
+
+def test_live_detections_survive_restart(models: DetectionModels, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("NEXUS_DB_FILE", str(tmp_path / "nexus.db"))
+    first = NexusService()
+    first.live.models = copy.deepcopy(models)
+    first.live.phase = "detecting"
+    first.live._window = scan_records()
+    asyncio.run(first.live._close_window())
+    asyncio.run(first.mark_false_positive(first.live.detections[-1]))
+    first.live.store.close()
+
+    second = NexusService()
+    assert len(second.live.detections) == 1
+    restored = second.state.by_id[second.live.detections[0]]
+    assert restored.threat.type == "port_scan" and restored.threat.status == "dismissed"
+    assert SCANNER in second.live.allowed

@@ -269,6 +269,20 @@ class NexusService:
     def current_simulation(self) -> Optional[SimulationState]:
         return self.simulation.sim if self.simulation else None
 
+    async def mark_false_positive(self, threat_id: str) -> dict[str, object]:
+        record = self.state.by_id.get(threat_id)
+        if record is None:
+            raise ServiceError(404, f"Threat {threat_id} not found")
+        result: dict[str, object] = {"host": None, "allowlisted": False, "learned": False}
+        if record.extra.get("live"):
+            result = await self.live.mark_false_positive(record)
+        record.threat = record.threat.model_copy(update={"status": "dismissed"})
+        now = now_ms()
+        self.bus.publish(message("threat.upsert", threat=record.threat))
+        self.publish_event(system_event("Marked as false positive", f"{record.threat.name} · {record.threat.source_label} dismissed by the analyst", now))
+        self.publish_metrics()
+        return {**result, "threat": record.threat.model_dump()}
+
     async def shutdown(self) -> None:
         await self.live.stop()
         if self._simulation_task and not self._simulation_task.done():

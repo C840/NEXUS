@@ -177,3 +177,29 @@ async def live_stop(service: NexusService = Service) -> dict[str, object]:
 async def live_train(service: NexusService = Service) -> dict[str, object]:
     await service.live.retrain()
     return service.live.status()
+
+
+
+@router.post("/threats/{threat_id}/false-positive", tags=["threats"])
+async def false_positive(threat_id: str, service: NexusService = Service) -> dict[str, object]:
+    return await service.mark_false_positive(threat_id)
+
+
+@router.get("/live/allowlist", tags=["live"])
+async def allowlist(service: NexusService = Service) -> list[dict[str, object]]:
+    return service.live.store.allowlist()
+
+
+@router.delete("/live/allowlist/{ip}", tags=["live"])
+async def remove_allowlisted(ip: str, service: NexusService = Service) -> list[dict[str, object]]:
+    service.live.unallow(ip)
+    return service.live.store.allowlist()
+
+
+@router.post("/live/test", tags=["live"])
+async def live_test(body: Optional[dict[str, str]] = Body(default=None), service: NexusService = Service) -> dict[str, object]:
+    try:
+        threat_id = await service.live.replay_test((body or {}).get("kind", "port_scan"))
+    except RuntimeError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    return {"threatId": threat_id}

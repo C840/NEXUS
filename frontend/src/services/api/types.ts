@@ -6,6 +6,8 @@ import type {
   AttackScenario,
   DashboardSummary,
   DefenseSettings,
+  AllowlistEntry,
+  FalsePositiveResult,
   LiveStatus,
   Device,
   EventQuery,
@@ -70,6 +72,11 @@ export interface NexusApi {
   startLive(iface?: string): Promise<LiveStatus>
   stopLive(): Promise<LiveStatus>
   retrainLive(): Promise<LiveStatus>
+  /** Feed a recorded attack pattern to the live models (nothing is sent on the network). */
+  runLiveTest(kind?: 'port_scan'): Promise<{ threatId: string }>
+  markFalsePositive(threatId: string): Promise<FalsePositiveResult>
+  getAllowlist(): Promise<AllowlistEntry[]>
+  removeFromAllowlist(ip: string): Promise<AllowlistEntry[]>
 }
 
 export class ApiError extends Error {
