@@ -76,7 +76,7 @@ and without the token the backend rejects remote requests.
   manage the allowlist on Live Capture.
 - **Report / PDF** (threat page) downloads a Markdown incident report or opens a print-ready copy.
 - **Ctrl+K** searches threats, IPs, devices and pages. **Bell** turns on desktop notifications for critical and
-  high threats. **Demo** turns the six-step guided walkthrough on or off (also in Settings).
+  high threats. **Demo** turns the 14-step guided walkthrough on or off (each step explains one feature and gives a one-line talking point) (also in Settings).
 - Live detections and the allowlist are saved in `backend/data/nexus.db` (gitignored) and survive restarts.
 
 ### LLM assistant (optional)

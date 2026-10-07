@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Presentation, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, MessageSquareQuote, Presentation, X } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { api } from '@/services'
 import { nexusActions, nexusStore } from '@/store'
@@ -9,20 +9,36 @@ import { prefsActions, usePrefs } from '@/store/prefs'
 
 interface Step {
   title: string
+  /** What is on screen / what is happening, in one or two short sentences. */
   body: string
+  /** One line to say to the audience. */
+  point: string
   route: string
   action?: { label: string; run: (go: (to: string) => void) => Promise<void> }
 }
 
+const openNewestThreat = async (go: (to: string) => void) => {
+  const newest = nexusStore.getState().threats[0]
+  if (newest) go(`/threats/${newest.id}`)
+}
+
 const STEPS: Step[] = [
   {
-    title: 'The overview',
-    body: 'One screen answers “are we safe?”: security score, active threats, live traffic and what NEXUS did last.',
+    title: 'Overview',
+    body: 'The live security posture: security score, active threats, network traffic and the last action NEXUS took.',
+    point: 'One screen answers “is the network safe right now?”',
     route: '/',
   },
   {
-    title: 'Real traffic from this PC',
-    body: 'Live Capture scores this machine’s Wi-Fi traffic every 5 seconds with models trained on this network. Run a test to see a real detection — no packets are sent.',
+    title: 'Live capture — real traffic',
+    body: 'This PC’s Wi-Fi packets (headers only) are grouped per device every 5 seconds. An Isolation Forest asks “is this unusual?” and an XGBoost model asks “which attack is it?”.',
+    point: 'This part is real machine learning on real traffic, trained on this network’s own normal behaviour.',
+    route: '/live',
+  },
+  {
+    title: 'Test detection',
+    body: 'Feeds a recorded port-scan pattern into the real models. No packets are sent; the result opens as a normal investigation.',
+    point: 'It proves the trained models catch an attack and explain it, safely.',
     route: '/live',
     action: {
       label: 'Run test detection',
@@ -33,8 +49,9 @@ const STEPS: Step[] = [
     },
   },
   {
-    title: 'Simulate an attack',
-    body: 'Launch the scripted port scan from PC-07. Watch the traffic spike, the detection and the automatic containment arrive live.',
+    title: 'Simulated attack',
+    body: 'A scripted port scan from PC-07 runs the whole loop in about 25 seconds: traffic spike → detection → risk score → automatic block → recovery.',
+    point: 'This shows autonomous response end to end, live.',
     route: '/',
     action: {
       label: 'Launch port scan',
@@ -44,25 +61,47 @@ const STEPS: Step[] = [
     },
   },
   {
-    title: 'Why NEXUS believes it',
-    body: 'Every threat opens an investigation: the features that drove the decision, the four risk factors, a timeline and a replay.',
+    title: 'Investigation — explainable AI',
+    body: 'Each threat shows the features that drove the decision against the normal baseline (SHAP), the four risk factors, a timeline and a replay.',
+    point: 'The analyst sees why NEXUS decided, not just a score.',
     route: '/threats',
-    action: {
-      label: 'Open the newest threat',
-      run: async (go) => {
-        const newest = nexusStore.getState().threats[0]
-        if (newest) go(`/threats/${newest.id}`)
-      },
-    },
+    action: { label: 'Open newest threat', run: openNewestThreat },
   },
   {
-    title: 'Ask in plain language',
-    body: 'The assistant answers from NEXUS data only. Ask why PC-07 was quarantined.',
+    title: 'Risk score',
+    body: 'Risk is the average of four factors: model confidence, anomaly severity, behaviour of the attack type and threat intelligence. Above 70 NEXUS blocks; above 85 it quarantines.',
+    point: 'Every risk number can be recomputed by hand — no hidden weights.',
+    route: '/threats',
+    action: { label: 'Open newest threat', run: openNewestThreat },
+  },
+  {
+    title: 'Network map',
+    body: 'The network from the internet edge to every device. Colours show each device’s state and the attack path is highlighted.',
+    point: 'It shows where in the network a threat is, at a glance.',
+    route: '/network',
+  },
+  {
+    title: 'Devices',
+    body: 'Every device with its risk score, status and whether it has been quarantined.',
+    point: 'The asset view: which machines are at risk.',
+    route: '/devices',
+  },
+  {
+    title: 'Analytics',
+    body: 'Attack trends over time, severity mix, response times and model performance.',
+    point: 'It shows how the system performs over days, not just in one incident.',
+    route: '/analytics',
+  },
+  {
+    title: 'AI assistant',
+    body: 'Ask in plain English. NEXUS gathers the facts itself and an LLM (Groq) only rewrites them; it cannot take actions.',
+    point: 'A grounded assistant: no invented facts, no actions on its own.',
     route: `/assistant?q=${encodeURIComponent('Why was PC-07 quarantined?')}`,
   },
   {
-    title: 'Keep a human in the loop',
-    body: 'Switch to manual mode and NEXUS prepares the response but waits for your approval. Switch back when you are done.',
+    title: 'Human in the loop',
+    body: 'In manual mode NEXUS prepares the response but waits for the analyst to approve it. Thresholds are adjustable here.',
+    point: 'How much NEXUS does on its own is a policy the operator controls.',
     route: '/settings',
     action: {
       label: 'Toggle autonomous mode',
@@ -70,6 +109,25 @@ const STEPS: Step[] = [
         await nexusActions.setAutonomousMode(!(nexusStore.getState().settings?.autonomousMode ?? true))
       },
     },
+  },
+  {
+    title: 'Analyst feedback and reports',
+    body: '“False positive” dismisses a threat, stops alerts from that host and retrains on it. “Report” and “PDF” export the incident.',
+    point: 'NEXUS learns from the analyst, and every incident can be documented.',
+    route: '/threats',
+    action: { label: 'Open newest threat', run: openNewestThreat },
+  },
+  {
+    title: 'Privacy by design',
+    body: 'The federated-learning design: sites share model updates, never raw traffic, protected with differential privacy. Simulated in this prototype.',
+    point: 'The future direction: learn together without sharing data.',
+    route: '/privacy',
+  },
+  {
+    title: 'Wrap-up',
+    body: 'Real: packet capture, the ML models, SHAP explanations and the assistant. Simulated: devices, history, enforcement and federation. Extras: Ctrl+K search and desktop alerts.',
+    point: 'A research prototype that detects, explains and responds in one loop.',
+    route: '/',
   },
 ]
 
@@ -115,14 +173,32 @@ export function DemoGuide() {
           <div className="mb-2 flex items-center gap-2">
             <Presentation className="size-4 text-cyan" aria-hidden />
             <p className="flex-1 text-xs font-medium text-cyan">
-              Demo · step {step + 1} of {STEPS.length}
+              Demo · {step + 1} of {STEPS.length}
             </p>
             <button type="button" onClick={() => prefsActions.setDemo(false)} className="rounded p-1 text-muted hover:text-ink" aria-label="Turn demo mode off">
               <X className="size-4" />
             </button>
           </div>
+          <div className="mb-3 flex gap-1" aria-hidden>
+            {STEPS.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                tabIndex={-1}
+                onClick={() => prefsActions.setDemoStep(i)}
+                className={`h-1 flex-1 rounded-full ${i <= step ? 'bg-cyan' : 'bg-line-strong'}`}
+              />
+            ))}
+          </div>
           <h2 className="text-[15px] font-semibold text-ink">{s.title}</h2>
           <p className="mt-1 text-sm leading-relaxed text-ink-2">{s.body}</p>
+          <p className="mt-3 flex gap-2 rounded-lg bg-cyan/8 px-3 py-2 text-[13px] leading-snug text-cyan-soft">
+            <MessageSquareQuote className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+            <span>
+              <span className="font-semibold">Say: </span>
+              {s.point}
+            </span>
+          </p>
           <div className="mt-4 flex items-center gap-2">
             <Button variant="ghost" size="sm" icon={ArrowLeft} disabled={step === 0} onClick={() => prefsActions.setDemoStep(step - 1)}>
               Back
