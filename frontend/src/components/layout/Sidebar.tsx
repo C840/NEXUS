@@ -112,16 +112,14 @@ export function Sidebar({ collapsed, onToggleCollapsed }: SidebarProps) {
                         )}
                         <item.icon className={cn('size-[17px] shrink-0', isActive ? 'text-cyan' : '')} strokeWidth={1.75} />
                         {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
-                        {item.to === '/threats' && activeThreats > 0 && (
-                          <span
-                            className={cn(
-                              'nums grid min-w-5 place-items-center rounded-md bg-critical/15 px-1 font-mono text-[10px] text-critical',
-                              collapsed && 'absolute top-1 right-2 h-4 min-w-4 text-[9px]',
-                            )}
-                          >
-                            {activeThreats}
-                          </span>
-                        )}
+                        {item.to === '/threats' && activeThreats > 0 &&
+                          (collapsed ? (
+                            <span aria-label={`${activeThreats} active threats`} className="absolute top-2 right-3 size-1.5 rounded-full bg-critical" />
+                          ) : (
+                            <span className="nums grid min-w-5 place-items-center rounded-md bg-critical/15 px-1 font-mono text-[10px] text-critical">
+                              {activeThreats}
+                            </span>
+                          ))}
                       </>
                     )}
                   </NavLink>

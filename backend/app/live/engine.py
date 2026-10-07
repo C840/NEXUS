@@ -30,7 +30,7 @@ from app.realtime import message
 from app.schemas import DataSourceInfo, FeatureContribution, TrafficPoint
 
 from .capture import PacketCapture, capture_available, list_interfaces
-from .features import FEATURE_BY_KEY, FEATURE_KEYS, WINDOW_SEC, PacketRecord, is_local, vector, window_features
+from .features import FEATURE_BY_KEY, FEATURE_KEYS, WINDOW_SEC, PacketRecord, in_networks, is_local, parse_networks, vector, window_features
 from .models import MIN_REAL_WINDOWS, DetectionModels
 
 if TYPE_CHECKING:
@@ -52,6 +52,8 @@ class LiveEngine:
     def __init__(self, service: NexusService) -> None:
         self.service = service
         self.interface = os.getenv("NEXUS_CAPTURE_IFACE", "Wi-Fi")
+        # Local virtual networks (Docker, WSL, Hyper-V) and multicast: scored and shown, never alerted on.
+        self.ignore = parse_networks(os.getenv("NEXUS_LIVE_IGNORE_CIDRS", "172.17.0.0/16,172.18.0.0/16,224.0.0.0/4,169.254.0.0/16"))
         self.models = DetectionModels()
         self.capture: Optional[PacketCapture] = None
         self.error: Optional[str] = None
@@ -274,6 +276,8 @@ class LiveEngine:
             return
 
         for i, (ip, p) in enumerate(zip(ips, preds)):
+            if in_networks(ip, self.ignore):
+                continue
             label: Optional[str] = None
             if p.label != "benign" and p.confidence >= ALERT_CONFIDENCE and p.anomaly >= ALERT_ANOMALY:
                 label = p.label

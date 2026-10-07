@@ -45,6 +45,8 @@ Tests: `npm test` (backend pytest suite + frontend type-check).
 2. Optional: copy `backend/.env.example` to `backend/.env` and set `NEXUS_CAPTURE_IFACE` (default `Wi-Fi`).
 3. Restart the backend. Capture starts automatically (`NEXUS_CAPTURE_AUTOSTART=0` disables it);
    control it from **Live Capture** in the sidebar.
+   Local virtual networks (Docker/WSL `172.17.0.0/16`, `172.18.0.0/16`), multicast and link-local
+   addresses are scored but never alerted on; change the list with `NEXUS_LIVE_IGNORE_CIDRS`.
 
 NEXUS first learns a baseline of your network (120 host-windows ≈ 10 minutes), then retrains the models on it
 and starts alerting. Only header fields are kept, and payloads are never stored. Attack classes (port scan, brute force,

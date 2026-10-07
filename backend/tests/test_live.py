@@ -118,3 +118,16 @@ def test_narrator_falls_back_to_rule_based_answer(monkeypatch: pytest.MonkeyPatc
     reply = asyncio.run(service.ask_async(request))
     assert reply.content == "Narrated answer." and "Groq" in reply.generated_by
     assert reply.evidence == rule_based.evidence
+
+
+def test_ignored_virtual_networks_never_alert(models: DetectionModels) -> None:
+    service = NexusService()
+    engine = service.live
+    engine.models = models
+    engine.phase = "detecting"
+    before = len(service.state.records)
+    docker = "172.17.44.108"
+    engine._window = [PacketRecord(i * 0.004, docker, f"192.168.1.{20 + i % 30}", "tcp", 60, 41000, 1 + i, syn=True) for i in range(1200)]
+    asyncio.run(engine._close_window())
+    assert len(service.state.records) == before
+    assert docker in engine.hosts  # still scored and visible

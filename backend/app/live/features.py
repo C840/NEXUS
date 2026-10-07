@@ -112,6 +112,26 @@ def name_entropy(name: str) -> float:
     return -sum(c / n * math.log2(c / n) for c in counts.values())
 
 
+def in_networks(ip: str, networks: "list[ipaddress.IPv4Network | ipaddress.IPv6Network]") -> bool:
+    try:
+        addr = ipaddress.ip_address(ip)
+    except ValueError:
+        return False
+    return any(addr in net for net in networks)
+
+
+def parse_networks(spec: str) -> "list[ipaddress.IPv4Network | ipaddress.IPv6Network]":
+    out = []
+    for part in spec.split(","):
+        part = part.strip()
+        if part:
+            try:
+                out.append(ipaddress.ip_network(part, strict=False))
+            except ValueError:
+                pass
+    return out
+
+
 def is_local(ip: str) -> bool:
     try:
         addr = ipaddress.ip_address(ip)

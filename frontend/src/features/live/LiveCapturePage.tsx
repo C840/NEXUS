@@ -131,7 +131,7 @@ export default function LiveCapturePage() {
   return (
     <>
       <PageHeader
-        eyebrow="Phase 4 · real detection"
+        eyebrow="Real detection"
         title="Live Capture"
         description="Packet headers captured on this machine are grouped into 5-second host windows, scored by an Isolation Forest and an XGBoost classifier, and explained with SHAP."
         meta={
@@ -216,7 +216,7 @@ export default function LiveCapturePage() {
         />
       </div>
 
-      <div className="mb-5 grid gap-5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+      <div className="mb-5 grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel>
           <PanelHeader eyebrow="Pipeline" title={phase.label} description={phase.detail} icon={Activity} iconTone={phase.tone} />
           <div className="mt-5">
@@ -263,7 +263,7 @@ export default function LiveCapturePage() {
         </Panel>
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel flush>
           <div className="p-5 pb-3">
             <PanelHeader eyebrow="Last window" title="Active hosts" description="Busiest hosts in the most recent 5 s window, with their anomaly score and predicted class." icon={Cpu} />
